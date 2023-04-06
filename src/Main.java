@@ -1,7 +1,5 @@
 public class Main {
     public static void main(String[] args) {
-        Signup sc = new Signup();
-        sc.setUsername("meow");
     }
 
     public static void mainMenu() {
