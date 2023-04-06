@@ -1,5 +1,38 @@
-public class Main {
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Menu {
+    private static final Scanner sc = new Scanner(System.in);
+    public static ArrayList<String> username = new ArrayList<>();
+    public static ArrayList<String> password = new ArrayList<>();
+
     public static void main(String[] args) {
+        mainMenu();
+        System.out.println("> Enter your command");
+        int command = sc.nextInt();
+        switch (command) {
+            case 1:
+                System.out.println("> Enter your username: ");
+                String user = sc.next();
+
+                System.out.println("> Enter your password: ");
+                String pass = sc.next();
+
+                if (user.equals("Admin") && pass.equals("Admin"))
+                {
+                    clearScreen();
+                    adminMenu();
+                } else if (username.contains(user) && password.contains(pass)) {
+                    clearScreen();
+                    passengerMenu();
+                } else {
+                    System.out.println("> Invalid username or password");
+                }
+                break;
+            case 2:
+                Signup signup = new Signup();
+        }
+
     }
 
     public static void mainMenu() {
