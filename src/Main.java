@@ -1,5 +1,7 @@
 public class Main {
     public static void main(String[] args) {
+        Signup sc = new Signup();
+        sc.setUsername("meow");
     }
 
     public static void mainMenu() {
@@ -39,5 +41,9 @@ public class Main {
                     <5> Booked tickets
                     <6> Add charge
                     <0> Sign out""");
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
     }
 }
