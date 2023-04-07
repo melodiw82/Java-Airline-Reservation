@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-    public static final Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     public static ArrayList<String> username = new ArrayList<>();
     public static ArrayList<String> password = new ArrayList<>();
 
