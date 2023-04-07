@@ -6,7 +6,7 @@ public class Signup {
     private static final String RED_BOLD = "\033[1;31m";
     private static final String GREEN_BOLD = "\033[1;32m";
     private static final String CYAN_BOLD = "\033[1;36m";
-    private static final String TEXT_ITALIC      = "\033[3m";
+    private static final String TEXT_ITALIC = "\033[3m";
     private static final Scanner sc = new Scanner(System.in);
 
     private final String regex = "^(?=.*[a-z])(?=."

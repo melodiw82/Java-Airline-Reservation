@@ -8,10 +8,6 @@ public class Menu {
     private static final String CYAN_BOLD = "\033[1;36m";
     private static final String RESET = "\033[0m";
 
-    public static void main(String[] args) {
-        menuExecution();
-    }
-
     public static void menuExecution() {
         clearScreen();
         mainMenu();
