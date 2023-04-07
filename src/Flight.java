@@ -1,13 +1,11 @@
+import java.util.ArrayList;
+
 public class Flight {
     // Fields
-    private String flightId;
-    private String origin;
-    private String destination;
-    private String date;
-    private String time;
-    private int price;
-    private int seats;
+    private String flightId, origin, destination, date, time;
+    private int price, seats;
 
+    public ArrayList<Flight> flights = new ArrayList<>();
 
     // Constructor
     public Flight() {
@@ -30,11 +28,19 @@ public class Flight {
         setSeats(seats);
     }
 
-    //toString
-    public String toString() {
-        return this.getFlightId() + "|" + this.getOrigin() + "|" + this.getDestination() + "|" + this.getDate() + "|" + this.getTime() + "|" + this.getPrice() + "|" + this.getSeats();
+    public void addFlight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
+        flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
+    }
+
+    public void updateFlight(String flightId) {
 
     }
+
+    //toString
+//    public String toString() {
+//        return this.getFlightId() + "|" + this.getOrigin() + "|" + this.getDestination() + "|" + this.getDate() + "|" + this.getTime() + "|" + this.getPrice() + "|" + this.getSeats();
+//
+//    }
 
     //getters and setters
 
