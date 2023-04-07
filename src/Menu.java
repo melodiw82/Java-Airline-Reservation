@@ -27,6 +27,7 @@ public class Menu {
                     pressEnterToContinue();
                     menuExecution();
                 }
+                default -> throw new IllegalStateException("Unexpected value: " + command);
             }
         }
     }
@@ -57,7 +58,7 @@ public class Menu {
         String pass = sc.next();
         if (user.equals("Admin") && pass.equals("Admin")) {
             clearScreen();
-            adminMenu();
+            // admin
         } else if (username.contains(user) && password.contains(pass)) {
             clearScreen();
             passengerMenu();
@@ -78,19 +79,6 @@ public class Menu {
 
                     <1> Sign in
                     <2> Sign up\s""");
-    }
-
-    private static void adminMenu() {
-        System.out.println("""
-                ::::::::::::::::::::::::::::::::::::::::
-                           Admin MENU OPTIONS
-                ::::::::::::::::::::::::::::::::::::::::
-                 ......................................
-                    <1> Add
-                    <2> Update
-                    <3> Remove
-                    <4> Flight schedules
-                    <0> Sign out""");
     }
 
     private static void passengerMenu() {

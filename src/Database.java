@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 
 public class Database {
-    private ArrayList<Flight> flights;
+    public ArrayList<Flight> flights = new ArrayList<>();
 
     // constructor
     public Database() {
-        flights = new ArrayList<>();
     }
 
     // getters and setters
