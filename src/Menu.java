@@ -6,6 +6,9 @@ public class Menu {
     public static ArrayList<String> username = new ArrayList<>();
     public static ArrayList<String> password = new ArrayList<>();
 
+    public static void main(String[] args) {
+        menuExecution();
+    }
     public static void menuExecution() {
         clearScreen();
         mainMenu();
@@ -23,10 +26,12 @@ public class Menu {
                     clearScreen();
                     Signup signup = new Signup();
                     pressEnterToContinue();
-                    menuExecution();
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + command);
             }
+            clearScreen();
+            mainMenu();
+            command = sc.nextInt();
         }
     }
 
@@ -64,7 +69,6 @@ public class Menu {
             System.out.println("> Invalid username or password");
             System.out.println("> If you don't hava an account, create one in sign up menu...");
             pressEnterToContinue();
-            menuExecution();
         }
     }
 
