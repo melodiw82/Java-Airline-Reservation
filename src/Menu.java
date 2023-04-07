@@ -2,11 +2,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-    private static final Scanner sc = new Scanner(System.in);
+    public static final Scanner sc = new Scanner(System.in);
     public static ArrayList<String> username = new ArrayList<>();
     public static ArrayList<String> password = new ArrayList<>();
-    private static final String CYAN_BOLD = "\033[1;36m";
-    private static final String RESET = "\033[0m";
 
     public static void menuExecution() {
         clearScreen();
@@ -33,7 +31,7 @@ public class Menu {
     }
 
     private static void signIn() {
-        System.out.println(CYAN_BOLD + """
+        System.out.println(Signup.CYAN_BOLD + """
 
                                                                                                \s
                                                                                                \s
@@ -51,7 +49,7 @@ public class Menu {
                   `--'---'  |  ,   / |   :    :'---'               |  ,   / '---'              \s
                              ---`-'   \\   \\  /                      ---`-'                     \s
                                        `--`-'                                                  \s
-                """ + RESET);
+                """ + Signup.RESET);
         System.out.println("> Enter your username: ");
         String user = sc.next();
         System.out.println("> Enter your password: ");
@@ -96,11 +94,11 @@ public class Menu {
                     <0> Sign out""");
     }
 
-    private static void clearScreen() {
+    public static void clearScreen() {
         System.out.print("\033[H\033[2J");
     }
 
-    private static void pressEnterToContinue() {
+    public static void pressEnterToContinue() {
         System.out.printf("%n%s%n", "Press Enter key to continue...");
         try {
             sc.nextLine();

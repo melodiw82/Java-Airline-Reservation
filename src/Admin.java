@@ -1,50 +1,44 @@
-import java.util.Scanner;
-
 public class Admin {
-    private static final Scanner sc = new Scanner(System.in);
-    private static final Database database = new Database();
-    private static final String GREEN_BOLD = "\033[1;32m";
-    private static final String RESET = "\033[0m";
+    private static final Flight flight = new Flight();
 
     public static void main(String[] args) {
         adminMenuExe();
+        System.out.println(flight.flights);
     }
 
     public static void adminMenuExe() {
-        clearScreen();
+        Menu.clearScreen();
         adminMenu();
         System.out.printf("%n%s%n", "> Enter your command: ");
-        int adminCommand = sc.nextInt();
+        int adminCommand = Menu.sc.nextInt();
         switch (adminCommand) {
             case 1:
-                clearScreen();
+                Menu.clearScreen();
                 System.out.println("> Add flight ID: (Ex. WX-12)");
-                String fId = sc.next();
+                String fId = Menu.sc.next();
                 System.out.println("> Add flight origin: (Ex. Yazd)");
-                String origin = sc.next();
+                String origin = Menu.sc.next();
                 System.out.println("> Add flight destination: (Ex.Tehran)");
-                String destination = sc.next();
+                String destination = Menu.sc.next();
                 System.out.println("> Add flight date: (yyyy-mm-dd)");
-                String date = sc.next();
+                String date = Menu.sc.next();
                 System.out.println("> Add flight time: (HH:MM)");
-                String time = sc.next();
+                String time = Menu.sc.next();
                 System.out.println("> Add flight price: (integer)");
-                int price = sc.nextInt();
+                int price = Menu.sc.nextInt();
                 System.out.println("> Add available seats: (integer)");
-                int seat = sc.nextInt();
-                database.addFlight(fId, origin, destination, date, time, price, seat);
-                System.out.println(GREEN_BOLD + ">> flight added successfully" + RESET);
+                int seat = Menu.sc.nextInt();
+                flight.addFlight(fId, origin, destination, date, time, price, seat);
+                System.out.println(Signup.GREEN_BOLD + ">> flight added successfully" + Signup.RESET);
 
-                pressEnterToContinue();
-                adminMenuExe();
+                Menu.pressEnterToContinue();
+
                 break;
 
             case 2:
                 System.out.println("> Enter the flight ID to be updated: ");
-                fId = sc.next();
-                if (database.flights.contains(fId)) {
-                    
-                }
+                fId = Menu.sc.next();
+
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + adminCommand);
@@ -62,19 +56,5 @@ public class Admin {
                     <3> Remove
                     <4> Flight schedules
                     <0> Sign out""");
-    }
-
-    private static void pressEnterToContinue() {
-        System.out.printf("%n%s%n", "Press Enter key to continue...");
-        try {
-            sc.nextLine();
-            sc.nextLine();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void clearScreen() {
-        System.out.print("\033[H\033[2J");
     }
 }

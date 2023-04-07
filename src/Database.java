@@ -1,18 +1,15 @@
-import java.util.ArrayList;
-
 public class Database {
-    public ArrayList<Flight> flights = new ArrayList<>();
+
+    private static final Flight flight = new Flight();
+
+    private static void restoredFlights() {
+        flight.addFlight("WX-12", "Yazd", "Tehran", "1401-12-10", "12:30", 700_000, 51);
+        flight.addFlight("WX-15", "Mashhad", "Ahvaz", "1401-12-11", "08:00", 900_000, 245);
+        flight.addFlight("BG-22", "Shiraz", "Tabriz", "1401-12-12", "22:30", 1_100_000, 12);
+    }
 
     // constructor
     public Database() {
     }
 
-    // getters and setters
-    public ArrayList<Flight> getFlights() {
-        return flights;
-    }
-
-    public void addFlight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
-        flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
-    }
 }
