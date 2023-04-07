@@ -1,4 +1,7 @@
+import java.util.Scanner;
+
 public class Admin {
+    private static final Scanner sc = new Scanner(System.in);
     private static final Flight flight = new Flight();
 
     public static void main(String[] args) {
@@ -10,24 +13,24 @@ public class Admin {
         Menu.clearScreen();
         adminMenu();
         System.out.printf("%n%s%n", "> Enter your command: ");
-        int adminCommand = Menu.sc.nextInt();
+        int adminCommand = sc.nextInt();
         switch (adminCommand) {
             case 1:
                 Menu.clearScreen();
                 System.out.println("> Add flight ID: (Ex. WX-12)");
-                String fId = Menu.sc.next();
+                String fId = sc.next();
                 System.out.println("> Add flight origin: (Ex. Yazd)");
-                String origin = Menu.sc.next();
+                String origin = sc.next();
                 System.out.println("> Add flight destination: (Ex.Tehran)");
-                String destination = Menu.sc.next();
+                String destination = sc.next();
                 System.out.println("> Add flight date: (yyyy-mm-dd)");
-                String date = Menu.sc.next();
+                String date = sc.next();
                 System.out.println("> Add flight time: (HH:MM)");
-                String time = Menu.sc.next();
+                String time = sc.next();
                 System.out.println("> Add flight price: (integer)");
-                int price = Menu.sc.nextInt();
+                int price = sc.nextInt();
                 System.out.println("> Add available seats: (integer)");
-                int seat = Menu.sc.nextInt();
+                int seat = sc.nextInt();
                 flight.addFlight(fId, origin, destination, date, time, price, seat);
                 System.out.println(Signup.GREEN_BOLD + ">> flight added successfully" + Signup.RESET);
 
@@ -37,7 +40,7 @@ public class Admin {
 
             case 2:
                 System.out.println("> Enter the flight ID to be updated: ");
-                fId = Menu.sc.next();
+                fId = sc.next();
 
                 break;
             default:
