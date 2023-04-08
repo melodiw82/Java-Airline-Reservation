@@ -28,22 +28,8 @@ public class Flight {
         Database.flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
     }
 
-    public void updateFlight(String flightId, int command) {
-        for (int i = 0; i < Database.flights.size(); i++) {
-            if ((Database.flights.get(i).flightId).equals(flightId)) {
-
-                switch (command) {
-                    case 1:
-
-                        break;
-                }
-            }
-        }
-    }
-
-    //toString
     public static void toString(int index) {
-        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n","|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
+        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
                 "|", Database.flights.get(index).getDestination(),
                 "|", Database.flights.get(index).getDate(), "|", Database.flights.get(index).getTime(),
                 "|", Database.flights.get(index).getPrice(), "|", Database.flights.get(index).getSeats(), "|"
