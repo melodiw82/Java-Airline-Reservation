@@ -1,16 +1,8 @@
 import java.util.ArrayList;
 
 public class Database {
-
     private static final Flight flight = new Flight();
     public static ArrayList<Flight> flights = new ArrayList<>();
-
-    public static void main(String[] args) {
-        Database database = new Database();
-        System.out.println(flights);
-
-       flights.get(0).setFlightId("melo");
-    }
 
     // constructor
     public Database() {

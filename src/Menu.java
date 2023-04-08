@@ -113,7 +113,7 @@ public class Menu {
         }
     }
 
-    public static void adminMenuExe() {
+    private static void adminMenuExe() {
         Menu.clearScreen();
         adminMenu();
         System.out.printf("%n%s%n", "> Enter your command: ");
@@ -136,7 +136,7 @@ public class Menu {
         }
     }
 
-    public static void adminMenu() {
+    private static void adminMenu() {
         System.out.println("""
                 ::::::::::::::::::::::::::::::::::::::::
                            Admin MENU OPTIONS
@@ -149,7 +149,7 @@ public class Menu {
                     <0> Sign out""");
     }
 
-    public static void addFlightMenu() {
+    private static void addFlightMenu() {
         Menu.clearScreen();
         System.out.println("> Add flight ID: (Ex. WX-12)");
         String fId = sc.next();
@@ -170,7 +170,7 @@ public class Menu {
         Menu.pressEnterToContinue();
     }
 
-    public static void updateFlightMenu() {
+    private static void updateFlightMenu() {
         Menu.clearScreen();
         System.out.println("> Enter the flight ID to be updated: ");
         String flightId = sc.next();
@@ -228,7 +228,7 @@ public class Menu {
         }
     }
 
-    public static void removeFlightMenu() {
+    private static void removeFlightMenu() {
         System.out.println("> Enter the flight ID to be removed: ");
         String flightId = sc.next();
         boolean foundFlight = false;
@@ -246,7 +246,7 @@ public class Menu {
         Menu.pressEnterToContinue();
     }
 
-    public static void scheduleFlightMenu() {
+    private static void scheduleFlightMenu() {
         System.out.println("> Flight schedule");
         System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", "FlightId", "|", "Origin",
                 "|", "Destination",
