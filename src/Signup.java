@@ -3,7 +3,7 @@ import java.util.regex.*;
 
 public class Signup {
     public static final String RESET = "\033[0m";
-    private static final String RED_BOLD = "\033[1;31m";
+    public static final String RED_BOLD = "\033[1;31m";
     public static final String GREEN_BOLD = "\u001B[32m";
     public static final String CYAN_BOLD = "\033[1;36m";
     private static final String TEXT_ITALIC = "\033[3m";

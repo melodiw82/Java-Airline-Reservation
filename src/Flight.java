@@ -1,11 +1,7 @@
-import java.util.ArrayList;
-
 public class Flight {
     // Fields
     private String flightId, origin, destination, date, time;
     private int price, seats;
-
-    public ArrayList<Flight> flights = new ArrayList<>();
 
     // Constructor
     public Flight() {
@@ -29,18 +25,16 @@ public class Flight {
     }
 
     public void addFlight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
-        flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
+        Database.flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
     }
 
-    public void updateFlight(String flightId) {
-
+    public static void toString(int index) {
+        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
+                "|", Database.flights.get(index).getDestination(),
+                "|", Database.flights.get(index).getDate(), "|", Database.flights.get(index).getTime(),
+                "|", Database.flights.get(index).getPrice(), "|", Database.flights.get(index).getSeats(), "|"
+        );
     }
-
-    //toString
-//    public String toString() {
-//        return this.getFlightId() + "|" + this.getOrigin() + "|" + this.getDestination() + "|" + this.getDate() + "|" + this.getTime() + "|" + this.getPrice() + "|" + this.getSeats();
-//
-//    }
 
     //getters and setters
 
