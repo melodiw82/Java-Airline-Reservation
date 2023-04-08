@@ -8,6 +8,7 @@ public class Menu {
     public static ArrayList<String> password = new ArrayList<>();
 
     public static void main(String[] args) {
+        Database database = new Database();
         menuExecution();
     }
     public static void menuExecution() {
@@ -38,24 +39,10 @@ public class Menu {
 
     private static void signIn() {
         System.out.println(Signup.CYAN_BOLD + """
-
-                                                                                               \s
-                                                                                               \s
-                                                                                               \s
-                              ,--,                                   ,--,                      \s
-                            ,--.'|                   ,---,         ,--.'|         ,---,        \s
-                  .--.--.   |  |,     ,----._,.  ,-+-. /  |        |  |,      ,-+-. /  |       \s
-                 /  /    '  `--'_    /   /  ' / ,--.'|'   |        `--'_     ,--.'|'   |       \s
-                |  :  /`./  ,' ,'|  |   :     ||   |  ,"' |        ,' ,'|   |   |  ,"' |       \s
-                |  :  ;_    '  | |  |   | .\\  .|   | /  | |        '  | |   |   | /  | |       \s
-                 \\  \\    `. |  | :  .   ; ';  ||   | |  | |        |  | :   |   | |  | |       \s
-                  `----.   \\'  : |__'   .   . ||   | |  |/         '  : |__ |   | |  |/        \s
-                 /  /`--'  /|  | '.'|`---`-'| ||   | |--'          |  | '.'||   | |--'         \s
-                '--'.     / ;  :    ;.'__/\\_: ||   |/              ;  :    ;|   |/             \s
-                  `--'---'  |  ,   / |   :    :'---'               |  ,   / '---'              \s
-                             ---`-'   \\   \\  /                      ---`-'                     \s
-                                       `--`-'                                                  \s
-                """ + Signup.RESET);
+                ::::::::::::::::::::::::::::::::::::::::
+                               SIGN IN
+                ::::::::::::::::::::::::::::::::::::::::
+                  """ + Signup.RESET);
         System.out.println("> Enter your username: ");
         String user = sc.next();
         System.out.println("> Enter your password: ");
@@ -74,29 +61,28 @@ public class Menu {
     }
 
     private static void mainMenu() {
-        System.out.println("""
+        System.out.println(Signup.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                            WELCOME TO AIRLINE RESERVATION SYSTEM
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                 ..........................MENU OPTIONS........................
 
                     <1> Sign in
-                    <2> Sign up\s""");
+                    <2> Sign up\s""" + Signup.RESET);
     }
 
     private static void passengerMenu() {
-        System.out.println("""
+        System.out.println(Signup.CYAN_BOLD +"""
                 ::::::::::::::::::::::::::::::::::::::::
                          PASSENGER MENU OPTIONS
                 ::::::::::::::::::::::::::::::::::::::::
-                 ......................................
                     <1> Change password
                     <2> Search flight tickets
                     <3> Booking ticket
                     <4> Ticket cancellation
                     <5> Booked tickets
                     <6> Add charge
-                    <0> Sign out""");
+                    <0> Sign out""" + Signup.RESET);
     }
 
     public static void clearScreen() {
@@ -137,20 +123,24 @@ public class Menu {
     }
 
     private static void adminMenu() {
-        System.out.println("""
+        System.out.println(Signup.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
-                           Admin MENU OPTIONS
+                           ADMIN MENU OPTIONS
                 ::::::::::::::::::::::::::::::::::::::::
-                 ......................................
                     <1> Add
                     <2> Update
                     <3> Remove
                     <4> Flight schedules
-                    <0> Sign out""");
+                    <0> Sign out""" + Signup.RESET);
     }
 
     private static void addFlightMenu() {
         Menu.clearScreen();
+        System.out.println(Signup.CYAN_BOLD + """
+                ::::::::::::::::::::::::::::::::::::::::
+                               ADD FLIGHT
+                ::::::::::::::::::::::::::::::::::::::::
+                  """ + Signup.RESET);
         System.out.println("> Add flight ID: (Ex. WX-12)");
         String fId = sc.next();
         System.out.println("> Add flight origin: (Ex. Yazd)");
@@ -172,6 +162,11 @@ public class Menu {
 
     private static void updateFlightMenu() {
         Menu.clearScreen();
+        System.out.println(Signup.CYAN_BOLD + """
+                ::::::::::::::::::::::::::::::::::::::::
+                            UPDATE FLIGHT
+                ::::::::::::::::::::::::::::::::::::::::
+                  """ + Signup.RESET);
         System.out.println("> Enter the flight ID to be updated: ");
         String flightId = sc.next();
         System.out.println("> Enter the section that needs to be updated: \n1.flight Id\n2.origin\n3.destination\n4.date\n5.time\n6.price\n7.seat");
@@ -229,6 +224,12 @@ public class Menu {
     }
 
     private static void removeFlightMenu() {
+        clearScreen();
+        System.out.println(Signup.CYAN_BOLD + """
+                ::::::::::::::::::::::::::::::::::::::::
+                            REMOVE FLIGHT
+                ::::::::::::::::::::::::::::::::::::::::
+                  """ + Signup.RESET);
         System.out.println("> Enter the flight ID to be removed: ");
         String flightId = sc.next();
         boolean foundFlight = false;
@@ -241,20 +242,27 @@ public class Menu {
             }
         }
         if (!foundFlight) {
-            System.out.println("> Invalid flight ID");
+            System.out.println(Signup.RED_BOLD + "> Invalid flight ID" + Signup.RESET);
         }
         Menu.pressEnterToContinue();
     }
 
     private static void scheduleFlightMenu() {
-        System.out.println("> Flight schedule");
+        clearScreen();
+        System.out.println(Signup.CYAN_BOLD + """
+                ::::::::::::::::::::::::::::::::::::::::
+                            FLIGHT SCHEDULE
+                ::::::::::::::::::::::::::::::::::::::::
+                  """ + Signup.RESET);
         System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", "FlightId", "|", "Origin",
                 "|", "Destination",
                 "|", "Date", "|", "Time",
                 "|", "Price", "|", "Seats", "|"
         );
+        System.out.println(".................................................................................................................");
         for (int i = 0; i < Database.flights.size(); i++) {
             Flight.toString(i);
+            System.out.println(".................................................................................................................");
         }
         Menu.pressEnterToContinue();
     }

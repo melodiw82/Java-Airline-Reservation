@@ -16,24 +16,12 @@ public class Signup {
 
     public Signup() {
         System.out.println("\n" + CYAN_BOLD +
-                "                                                                            \n" +
-                "                                                                            \n" +
-                "                                                                            \n" +
-                "              ,--,                                               ,-.----.   \n" +
-                "            ,--.'|                   ,---,                  ,--, \\    /  \\  \n" +
-                "  .--.--.   |  |,     ,----._,.  ,-+-. /  |               ,'_ /| |   :    | \n" +
-                " /  /    '  `--'_    /   /  ' / ,--.'|'   |          .--. |  | : |   | .\\ : \n" +
-                "|  :  /`./  ,' ,'|  |   :     ||   |  ,\"' |        ,'_ /| :  . | .   : |: | \n" +
-                "|  :  ;_    '  | |  |   | .\\  .|   | /  | |        |  ' | |  . . |   |  \\ : \n" +
-                " \\  \\    `. |  | :  .   ; ';  ||   | |  | |        |  | ' |  | | |   : .  | \n" +
-                "  `----.   \\'  : |__'   .   . ||   | |  |/         :  | : ;  ; | :     |`-' \n" +
-                " /  /`--'  /|  | '.'|`---`-'| ||   | |--'          '  :  `--'   \\:   : :    \n" +
-                "'--'.     / ;  :    ;.'__/\\_: ||   |/              :  ,      .-./|   | :    \n" +
-                "  `--'---'  |  ,   / |   :    :'---'                `--`----'    `---'.|    \n" +
-                "             ---`-'   \\   \\  /                                     `---`    \n" +
-                "                       `--`-'                                               \n" + RESET);
+                """
+                 ::::::::::::::::::::::::::::::::::::::::
+                                SIGN UP
+                 ::::::::::::::::::::::::::::::::::::::::
+                   """ + RESET);
 
-        System.out.println();
         System.out.println(TEXT_ITALIC + RED_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::
                 username and password must contain the followings:
@@ -42,6 +30,7 @@ public class Signup {
                 >> numbers
                 >> with the length of at least 4 digits
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::""" + RESET);
+        System.out.println();
         System.out.println("> Enter your username: ");
         setUsername(sc.nextLine());
         System.out.println("> Enter your password: ");
