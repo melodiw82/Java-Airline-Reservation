@@ -1,16 +1,14 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
     private static final Scanner sc = new Scanner(System.in);
     private static final Flight flight = new Flight();
-    public static ArrayList<String> username = new ArrayList<>();
-    public static ArrayList<String> password = new ArrayList<>();
 
     public static void main(String[] args) {
         Database database = new Database();
         menuExecution();
     }
+
     public static void menuExecution() {
         clearScreen();
         mainMenu();
@@ -25,7 +23,6 @@ public class Menu {
                     signIn();
                 }
                 case 2 -> {
-                    clearScreen();
                     Signup signup = new Signup();
                     pressEnterToContinue();
                 }
@@ -47,13 +44,21 @@ public class Menu {
         String user = sc.next();
         System.out.println("> Enter your password: ");
         String pass = sc.next();
+
+        boolean isValid = false;
         if (user.equals("Admin") && pass.equals("Admin")) {
+            isValid = true;
             clearScreen();
             adminMenuExe();
-        } else if (username.contains(user) && password.contains(pass)) {
-            clearScreen();
-            passengerMenu();
-        } else {
+        }
+        for (int i = 0; i < Database.users.size(); i++) {
+            if (Database.users.get(i).getUsername().equals(user) && Database.users.get(i).getPassword().equals(pass)) {
+                isValid = true;
+                clearScreen();
+                passengerMenu();
+            }
+        }
+        if (!isValid) {
             System.out.println("> Invalid username or password");
             System.out.println("> If you don't hava an account, create one in sign up menu...");
             pressEnterToContinue();
@@ -72,7 +77,7 @@ public class Menu {
     }
 
     private static void passengerMenu() {
-        System.out.println(Signup.CYAN_BOLD +"""
+        System.out.println(Signup.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
                          PASSENGER MENU OPTIONS
                 ::::::::::::::::::::::::::::::::::::::::

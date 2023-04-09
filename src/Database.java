@@ -2,7 +2,9 @@ import java.util.ArrayList;
 
 public class Database {
     private static final Flight flight = new Flight();
+    private static final User user = new User();
     public static ArrayList<Flight> flights = new ArrayList<>();
+    public static ArrayList<User> users = new ArrayList<>();
 
     // constructor
     public Database() {
