@@ -2,36 +2,32 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class passenger {
+public class Passenger {
 
     static Pattern pattern = Pattern.compile(Signup.regex);
 
     private static final Scanner sc = new Scanner(System.in);
     private static final User new_user = new User();
+    private static final Ticket ticket = new Ticket();
+    private static final Flight flight = new Flight();
 
-    public static void main(String[] args) {
-        Database database = new Database();
-        passengerMenuExe();
-    }
-
-    private static void passengerMenuExe() {
+    public static void passengerMenuExe() {
         Menu.clearScreen();
         passengerMenu();
+        System.out.println();
         System.out.println("> Enter your command: ");
         int userCommand = sc.nextInt();
         while (userCommand != 0) {
             switch (userCommand) {
-                case 1:
+                case 1 -> {
                     Menu.clearScreen();
                     System.out.println(Signup.CYAN_BOLD + """
                             ::::::::::::::::::::::::::::::::::::::::
                                         CHANGE PASSWORD
                             ::::::::::::::::::::::::::::::::::::::::
                               """ + Signup.RESET);
-
                     System.out.println("> Enter your username: ");
                     String user = sc.next();
-
                     boolean found = false;
                     for (int i = 0; i < Database.users.size(); i++) {
                         if (Database.users.get(i).getUsername().equals(user)) {
@@ -59,15 +55,14 @@ public class passenger {
                         System.out.println(Signup.RED_BOLD + "> Invalid username" + Signup.RESET);
                     }
                     Menu.pressEnterToContinue();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     Menu.clearScreen();
                     System.out.println(Signup.CYAN_BOLD + """
                             ::::::::::::::::::::::::::::::::::::::::
                                       SEARCH FLIGHT TICKETS
                             ::::::::::::::::::::::::::::::::::::::::
                               """ + Signup.RESET);
-
                     System.out.println("> Enter the field you want to search:\n1.flight Id\n2.origin\n3.destination\n4.date\n5.time\n6.price range ");
                     int searchCom = sc.nextInt();
                     switch (searchCom) {
@@ -133,36 +128,100 @@ public class passenger {
                             Menu.pressEnterToContinue();
                         }
                     }
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
+                }
+                case 3 -> {
+                    Menu.clearScreen();
+                    System.out.println(Signup.CYAN_BOLD + """
+                            ::::::::::::::::::::::::::::::::::::::::
+                                        BOOKING TICKET
+                            ::::::::::::::::::::::::::::::::::::::::
+                              """ + Signup.RESET);
+                    System.out.println("> Enter your username: ");
+                    int userIndex = new_user.findUser(sc.next());
+                    if (userIndex == -1) {
+                        System.out.println("> User not found");
+                        Menu.pressEnterToContinue();
+                        break;
+
+                    }
+
+                    System.out.println("> Enter the flightId you want to book: ");
+                    int flightIndex = flight.findFlight(sc.next());
+                    if (flightIndex == -1) {
+                        System.out.println("> Flight not found");
+                        Menu.pressEnterToContinue();
+                        break;
+                    }
+
+                    if (userIndex >= 0 && flightIndex >= 0) {
+                        ticket.buyTicket(userIndex, flightIndex);
+                        Menu.pressEnterToContinue();
+                    }
+                }
+                case 4 -> {
+                    Menu.clearScreen();
+                    System.out.println(Signup.CYAN_BOLD + """
+                            ::::::::::::::::::::::::::::::::::::::::
+                                      TICKET CANCELLATION
+                            ::::::::::::::::::::::::::::::::::::::::
+                              """ + Signup.RESET);
+                    System.out.println("> Enter your your ticket Id: ");
+                    int ticketIndex = ticket.findTicket(sc.next());
+                    if (ticketIndex == -1) {
+                        System.out.println("> Ticket not found");
+                        Menu.pressEnterToContinue();
+                    } else if (ticketIndex >= 0) {
+                        ticket.cancelTicket(ticketIndex);
+                        Menu.pressEnterToContinue();
+                    }
+
+                }
+                case 5 -> {
+                    Menu.clearScreen();
+                    System.out.println(Signup.CYAN_BOLD + """
+                            ::::::::::::::::::::::::::::::::::::::::
+                                        BOOKED TICKET
+                            ::::::::::::::::::::::::::::::::::::::::
+                              """ + Signup.RESET);
+
+                    System.out.println("> Enter your username: ");
+                    int userIndex = new_user.findUser(sc.next());
+                    if (userIndex == -1) {
+                        System.out.println("> User not found");
+                        Menu.pressEnterToContinue();
+                    } else {
+                        ticket.bookedTicket(userIndex);
+                        Menu.pressEnterToContinue();
+                    }
+
+                }
+                case 6 -> {
                     Menu.clearScreen();
                     System.out.println(Signup.CYAN_BOLD + """
                             ::::::::::::::::::::::::::::::::::::::::
                                           ADD CHARGE
                             ::::::::::::::::::::::::::::::::::::::::
                               """ + Signup.RESET);
-
                     System.out.println("> Enter your username: ");
-                    int index = new_user.findUser(sc.next());
-                    if (index == -1) {
+                    int userIndex = new_user.findUser(sc.next());
+                    if (userIndex == -1) {
+                        System.out.println("> User not found");
                         Menu.pressEnterToContinue();
-                        passengerMenuExe();
+                    } else {
+                        System.out.println("> Your current balance is " + Database.users.get(userIndex).getBalance());
+                        System.out.println();
+                        System.out.println("> How much would you like to charge your account? ");
+                        System.out.println("> to the limit of " + Integer.MAX_VALUE);
+                        new_user.addBalance(sc.nextInt(), userIndex);
+                        Menu.pressEnterToContinue();
                     }
-                    System.out.println("> How much would you like to charge your account? ");
-                    new_user.addBalance(sc.nextInt(), index);
-                    Menu.pressEnterToContinue();
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + userCommand);
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + userCommand);
             }
             Menu.clearScreen();
             passengerMenu();
+            System.out.println();
+            System.out.println("> Enter your command: ");
             userCommand = sc.nextInt();
         }
     }
@@ -183,3 +242,9 @@ public class passenger {
 }
 
 // make date and time right
+// big numbers in charge int
+// use of iterators
+// I ask for username constantly
+// Menus shouldn't be called inside each other
+// complete the database
+// comments

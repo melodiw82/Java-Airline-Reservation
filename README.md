@@ -11,7 +11,7 @@ TAs: [Mohsen Gholami](https://about.me/iMohsen02) - [Pooria Azami](https://githu
 **AIRLINES RESERVATION SYSTEM**
 
 
-This project aims to simulate the online reservation system of airline tickets in a console application (non-graphics). The airline reservations System contains airline schedules, passenger reservations, and ticket records. This system includes two types of users like passengers, and system administrator.
+This project aims to simulate the online reservation system of airline tickets in a console application (non-graphics). The airline reservations System contains airline schedules, Passenger reservations, and ticket records. This system includes two types of users like passengers, and system administrator.
 
 ```
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -55,7 +55,7 @@ The admin is able to add, update or remove flight details. The flight schedule i
 Seat refers to available seats that are reduced by booking a ticket.
 
 Other Users:
-After creating your account as a new passenger, and sign in, the guidance menu options display as follows:
+After creating your account as a new Passenger, and sign in, the guidance menu options display as follows:
 ```
 ::::::::::::::::::::::::::::::::::::::::
          PASSENGER MENU OPTIONS

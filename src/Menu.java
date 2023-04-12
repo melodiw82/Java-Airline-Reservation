@@ -55,7 +55,7 @@ public class Menu {
             if (Database.users.get(i).getUsername().equals(user) && Database.users.get(i).getPassword().equals(pass)) {
                 isValid = true;
                 clearScreen();
-                // passenger
+                Passenger.passengerMenuExe();
             }
         }
         if (!isValid) {

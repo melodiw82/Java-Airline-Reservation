@@ -36,6 +36,15 @@ public class Flight {
         );
     }
 
+    public int findFlight(String flightId) {
+        for (int i = 0; i < Database.flights.size(); i++) {
+            if (Database.flights.get(i).getFlightId().equals(flightId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //getters and setters
 
     public String getFlightId() {

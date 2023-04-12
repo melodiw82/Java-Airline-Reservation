@@ -60,8 +60,6 @@ public class User {
         for (int i = 0; i < Database.users.size(); i++) {
             if (Database.users.get(i).getUsername().equals(username)) {
                 return i;
-            } else {
-                System.out.println(Signup.RED_BOLD + "> User not found " + Signup.RESET);
             }
         }
         return -1;
