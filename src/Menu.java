@@ -55,7 +55,7 @@ public class Menu {
             if (Database.users.get(i).getUsername().equals(user) && Database.users.get(i).getPassword().equals(pass)) {
                 isValid = true;
                 clearScreen();
-                passengerMenu();
+                // passenger
             }
         }
         if (!isValid) {
@@ -74,20 +74,6 @@ public class Menu {
 
                     <1> Sign in
                     <2> Sign up\s""" + Signup.RESET);
-    }
-
-    private static void passengerMenu() {
-        System.out.println(Signup.CYAN_BOLD + """
-                ::::::::::::::::::::::::::::::::::::::::
-                         PASSENGER MENU OPTIONS
-                ::::::::::::::::::::::::::::::::::::::::
-                    <1> Change password
-                    <2> Search flight tickets
-                    <3> Booking ticket
-                    <4> Ticket cancellation
-                    <5> Booked tickets
-                    <6> Add charge
-                    <0> Sign out""" + Signup.RESET);
     }
 
     public static void clearScreen() {
@@ -272,3 +258,6 @@ public class Menu {
         Menu.pressEnterToContinue();
     }
 }
+
+// handling the exceptions on the inputs and updating and removing the flight
+// making the classes correct
