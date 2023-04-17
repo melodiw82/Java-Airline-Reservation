@@ -28,7 +28,7 @@ public class Flight {
         Database.flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
     }
 
-    public static void toString(int index) {
+    public void toString(int index) {
         System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
                 "|", Database.flights.get(index).getDestination(),
                 "|", Database.flights.get(index).getDate(), "|", Database.flights.get(index).getTime(),

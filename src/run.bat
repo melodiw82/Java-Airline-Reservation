@@ -1,4 +1,4 @@
 mode con:cols=150 lines=30
 javac *.java
-java Menu
+java Main
 pause

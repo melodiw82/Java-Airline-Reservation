@@ -1,7 +1,8 @@
 public class Ticket {
     private String ticketId, tiFlightId, tiUsername;
-    private static final Flight flight = new Flight();
-    private static final User user = new User();
+    private final Flight flight = new Flight();
+    private final User user = new User();
+    private final Utils utils = new Utils();
 
     private static int ticketCounter = 0;
 
@@ -9,24 +10,12 @@ public class Ticket {
         return ticketId;
     }
 
-    public void setTicketId(String ticketId) {
-        this.ticketId = ticketId;
-    }
-
     public String getTiFlightId() {
         return tiFlightId;
     }
 
-    public void setTiFlightId(String tiFlightId) {
-        this.tiFlightId = tiFlightId;
-    }
-
     public String getTiUsername() {
         return tiUsername;
-    }
-
-    public void setTiUsername(String tiUsername) {
-        this.tiUsername = tiUsername;
     }
 
     public Ticket(String ticketId, String flightId, String username) {
@@ -36,10 +25,12 @@ public class Ticket {
     }
 
     public Ticket() {
-
+        ticketId = "Not available";
+        tiFlightId = "No flights found";
+        tiUsername = "No username";
     }
 
-    public static String GenerateId(int flightIndex) {
+    private String GenerateId(int flightIndex) {
         String newFlightId = Database.flights.get(flightIndex).getFlightId();
         ticketCounter++;
         return newFlightId + ticketCounter;
@@ -49,36 +40,57 @@ public class Ticket {
         Database.tickets.add(new Ticket(ticketId, flightId, username));
     }
 
+    public void toString(int index) {
+        System.out.printf("%s%-15s%s%-15s%s%n", "|TicketID: ", Database.tickets.get(index).getTicketId(), "|FlightID: ", Database.tickets.get(index).getTiFlightId(), "|");
+    }
+
+    public int findTicket(String ticketId) {
+        for (int i = 0; i < Database.tickets.size(); i++) {
+            if (Database.tickets.get(i).getTicketId().equals(ticketId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void buyTicket(int userIndex, int flightIndex) {
         int price = Database.flights.get(flightIndex).getPrice();
-        int userBalance = Database.users.get(userIndex).getBalance();
+        long userBalance = Database.users.get(userIndex).getBalance();
+
         if (userBalance < price) {
-            int shortOf = price - userBalance;
+            long shortOf = price - userBalance;
             System.out.println("> You're short of " + shortOf);
             System.out.println("> Please charge your account");
-            Menu.pressEnterToContinue();
-            Passenger.passengerMenuExe();
         } else {
-            int newBalance = userBalance - price;
+            long newBalance = userBalance - price;
             Database.users.get(userIndex).setBalance(newBalance);
-            bookFlight(flightIndex);
 
-            System.out.println(Signup.GREEN_BOLD + "> Flight booked successfully" + Signup.RESET);
+            boolean isAvailable = bookSeat(flightIndex);
 
-            String newTicketId = GenerateId(flightIndex);
-            addTicket(newTicketId, Database.flights.get(flightIndex).getFlightId(), Database.users.get(userIndex).getUsername());
-            System.out.println("> Your ticket Id is " + newTicketId);
+            if (isAvailable) {
+                System.out.println();
+                System.out.println(utils.GREEN_BOLD + "> Flight booked successfully" + utils.RESET);
+
+                String newTicketId = GenerateId(flightIndex);
+                addTicket(newTicketId, Database.flights.get(flightIndex).getFlightId(), Database.users.get(userIndex).getUsername());
+                System.out.println("> Your ticket Id is " + newTicketId);
+            }
+
+            if (!isAvailable) {
+                System.out.println("> Flight is booked fully");
+            }
         }
     }
 
-    public void bookFlight(int flightIndex) {
+    private boolean bookSeat(int flightIndex) {
         int temp = Database.flights.get(flightIndex).getSeats();
-        temp -= 1;
-        Database.flights.get(flightIndex).setSeats(temp);
-    }
-
-    public static void toString(int index) {
-        System.out.printf("%s%-15s%s%-15s%s%n", "|TicketID: ", Database.tickets.get(index).getTicketId(), "|FlightID: ", Database.tickets.get(index).getTiFlightId(), "|");
+        if (temp == 0) {
+            return false;
+        } else {
+            temp -= 1;
+            Database.flights.get(flightIndex).setSeats(temp);
+            return true;
+        }
     }
 
     public void bookedTicket(int userIndex) {
@@ -96,36 +108,27 @@ public class Ticket {
         }
     }
 
-    public int findTicket(String ticketId) {
-        for (int i = 0; i < Database.tickets.size(); i++) {
-            if (Database.tickets.get(i).getTicketId().equals(ticketId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public void cancelFlight(int flightIndex) {
-        int temp = Database.flights.get(flightIndex).getSeats();
-        temp += 1;
-        Database.flights.get(flightIndex).setSeats(temp);
-    }
-
     public void cancelTicket(int ticketIndex) {
         String flightId = Database.tickets.get(ticketIndex).getTiFlightId();
         int flightIndex = flight.findFlight(flightId);
-        cancelFlight(flightIndex);
+        cancelSeat(flightIndex);
 
         String username = Database.tickets.get(ticketIndex).getTiUsername();
         int userIndex = user.findUser(username);
         int price = Database.flights.get(flightIndex).getPrice();
-        int balance = Database.users.get(userIndex).getBalance();
-        int backToAccount = balance + price;
+        long balance = Database.users.get(userIndex).getBalance();
+        long backToAccount = balance + price;
 
         Database.users.get(userIndex).setBalance(backToAccount);
 
         Database.tickets.remove(ticketIndex);
 
-        System.out.println(Signup.GREEN_BOLD + "> Ticket cancelled successfully" + Signup.RESET);
+        System.out.println(utils.GREEN_BOLD + "> Ticket cancelled successfully" + utils.RESET);
+    }
+
+    private void cancelSeat(int flightIndex) {
+        int temp = Database.flights.get(flightIndex).getSeats();
+        temp += 1;
+        Database.flights.get(flightIndex).setSeats(temp);
     }
 }

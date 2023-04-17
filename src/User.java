@@ -2,9 +2,10 @@ import java.util.Scanner;
 
 public class User {
     private String username, password;
-    private int balance;
+    private long balance;
 
-    private static final Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
+    private final Utils utils = new Utils();
 
     public User() {
         username = "unknown username";
@@ -38,21 +39,21 @@ public class User {
         this.password = password;
     }
 
-    public int getBalance() {
+    public long getBalance() {
         return balance;
     }
 
     public void addBalance(int balance, int index) {
         if (balance >= 0) {
             Database.users.get(index).setBalance(balance);
-            System.out.println(Signup.GREEN_BOLD + "> Charge added to account" + Signup.RESET);
+            System.out.println(utils.GREEN_BOLD + "> Charge added to account" + utils.RESET);
         } else {
             System.out.println("> Enter a valid amount ");
             addBalance(sc.nextInt(), index);
         }
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(long balance) {
         this.balance += balance;
     }
 
