@@ -99,6 +99,7 @@ public class AdminMenu {
                 System.out.println();
                 isBooked = true;
                 utils.pressEnterToContinue();
+                break;
             }
         }
 
@@ -196,6 +197,7 @@ public class AdminMenu {
                 System.out.println();
                 System.out.println(utils.RED_BOLD + "> Flight is already booked and cannot be removed" + utils.RESET);
                 isBooked = true;
+                break;
             }
         }
 
