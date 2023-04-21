@@ -6,8 +6,10 @@ public class Menu {
     private PassengerMenu passengerMenu = new PassengerMenu();
     private Utils utils = new Utils();
 
+    // keeps track of the user's username when signing in
     public static String currentUsername;
 
+    // executes the menu
     public void menuExecution() {
         utils.clearScreen();
         mainMenu();
@@ -36,6 +38,7 @@ public class Menu {
         }
     }
 
+    // signs in the admin and user
     private void signIn() {
         signInMenu();
         System.out.println("> Enter your username: ");
@@ -64,6 +67,7 @@ public class Menu {
         }
     }
 
+    // prints menus
     private void mainMenu() {
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -12,5 +12,3 @@ public class Main {
         menu.menuExecution();
     }
 }
-
-// in hame object
