@@ -5,10 +5,11 @@ public class Database {
     public static ArrayList<User> users = new ArrayList<>();
     public static ArrayList<Ticket> tickets = new ArrayList<>();
 
-    // constructor
+    // constructor that adds the list of flights to the flights array list whenever an instance of Database class is created
+    // users and tickets can also be added
     public Database() {
         Flight flight = new Flight();
-        flight.addFlight("FA-17", "Yazd", "Shiraz", "1401-12-10", "12:30", 500_000, 51);
+        flight.addFlight("FA-17", "Yazd", "Shiraz", "1401-12-10", "12:30", 500_000, 73);
         flight.addFlight("TA-55", "Yazd", "Isfahan", "1401-10-10", "13:30", 600_000, 100);
         flight.addFlight("TR-64", "Shiraz", "Mashhad", "1401-11-10", "14:30", 700_000, 201);
         flight.addFlight("WX-12", "Mashhad", "Tehran", "1401-12-15", "15:30", 700_000, 64);
@@ -21,7 +22,5 @@ public class Database {
 
         User user = new User();
         user.addUser("Melodiw82", "Zara72", 7_000_000);
-        Ticket ticket = new Ticket();
-        ticket.addTicket("WX-120", "WX-12", "Melodiw82");
     }
 }

@@ -3,7 +3,7 @@ public class Flight {
     private String flightId, origin, destination, date, time;
     private int price, seats;
 
-    // Constructor
+    // constructor for initialization
     public Flight() {
         flightId = "no available flight ID";
         origin = "unknown origin city";
@@ -14,6 +14,7 @@ public class Flight {
         seats = 100;
     }
 
+    // constructor
     public Flight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
         setFlightId(flightId);
         setOrigin(origin);
@@ -24,10 +25,12 @@ public class Flight {
         setSeats(seats);
     }
 
+    // adds flights to the flights arraylist
     public void addFlight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
         Database.flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
     }
 
+    // prints the list of flights used in flight schedule field
     public void toString(int index) {
         System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
                 "|", Database.flights.get(index).getDestination(),
@@ -36,6 +39,7 @@ public class Flight {
         );
     }
 
+    // finds the flights[index] from the flights arraylist
     public int findFlight(String flightId) {
         for (int i = 0; i < Database.flights.size(); i++) {
             if (Database.flights.get(i).getFlightId().equals(flightId)) {
@@ -46,7 +50,6 @@ public class Flight {
     }
 
     //getters and setters
-
     public String getFlightId() {
         return flightId;
     }

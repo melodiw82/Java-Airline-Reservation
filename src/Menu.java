@@ -1,11 +1,10 @@
 import java.util.Scanner;
 
 public class Menu {
-    private final Scanner sc = new Scanner(System.in);
-    private final Flight flight = new Flight();
-    private final AdminMenu adminMenu = new AdminMenu();
-    private final PassengerMenu passengerMenu = new PassengerMenu();
-    private final Utils utils = new Utils();
+    private Scanner sc = new Scanner(System.in);
+    private AdminMenu adminMenu = new AdminMenu();
+    private PassengerMenu passengerMenu = new PassengerMenu();
+    private Utils utils = new Utils();
 
     public static String currentUsername;
 
@@ -59,8 +58,8 @@ public class Menu {
         }
         if (!isValid) {
             System.out.println();
-            System.out.println("> Invalid username or password");
-            System.out.println("> If you don't hava an account, create one in sign up menu...");
+            System.out.println(utils.RED_BOLD + "> Invalid username or password" + utils.RESET);
+            System.out.println(utils.GREY_BOLD + "> If you don't hava an account, create one in sign up menu..." + utils.RESET);
             utils.pressEnterToContinue();
         }
     }
