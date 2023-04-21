@@ -49,7 +49,7 @@ public class User {
             System.out.println(utils.GREEN_BOLD + "> Charge added to account" + utils.RESET);
         } else {
             System.out.println("> Enter a valid amount ");
-            addBalance(sc.nextInt(), index);
+            addBalance(utils.inputNum(), index);
         }
     }
 

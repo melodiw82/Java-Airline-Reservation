@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +20,7 @@ public class PassengerMenu {
         passengerMenu();
         System.out.println();
         System.out.println("> Enter your command: ");
-        int userCommand = sc.nextInt();
+        int userCommand = utils.inputNum();
 
         while (userCommand != 0) {
             switch (userCommand) {
@@ -31,13 +30,16 @@ public class PassengerMenu {
                 case 4 -> cancelTicket();
                 case 5 -> bookedTicket();
                 case 6 -> addCharge();
-                default -> throw new InputMismatchException("Unexpected value: " + userCommand);
+                default -> {
+                    System.out.println("> Invalid input");
+                    utils.pressEnterToContinue();
+                }
             }
             utils.clearScreen();
             passengerMenu();
             System.out.println();
             System.out.println("> Enter your command: ");
-            userCommand = sc.nextInt();
+            userCommand = utils.inputNum();
         }
     }
 
@@ -115,9 +117,13 @@ public class PassengerMenu {
                     System.out.println("> Username is the same as before...");
                 } else if ((pass.length() >= 4) && matcher.matches()) {
                     Database.users.get(i).setPassword(pass);
+                    System.out.println();
+                    System.out.println();
                     System.out.println(utils.GREEN_BOLD + "> Password changed successfully" + utils.RESET);
                 } else {
+                    System.out.println();
                     System.out.println(">" + utils.RED_BOLD + "Invalid password..." + utils.RESET);
+                    System.out.println();
                     System.out.println(">" + utils.RED_BOLD + "Please try again... " + utils.RESET);
                 }
             }
@@ -148,7 +154,7 @@ public class PassengerMenu {
 
         System.out.println("> Enter the field you want to search:\n1.flight Id\n2.origin\n3.destination\n4.date\n5.time\n6.price range ");
         System.out.println();
-        int searchCom = sc.nextInt();
+        int searchCom = utils.inputNum();
         switch (searchCom) {
             case 1 -> {
                 utils.clearScreen();
@@ -197,8 +203,7 @@ public class PassengerMenu {
                 utils.pressEnterToContinue();
             }
             case 4 -> {
-                System.out.println("> Enter the flight date(yyyy-mm-dd): ");
-                String date = sc.next();
+                String date = utils.inputDate();
                 boolean isFound = false;
                 for (int i = 0; i < Database.flights.size(); i++) {
                     if (Database.flights.get(i).getDate().equals(date)) {
@@ -212,8 +217,7 @@ public class PassengerMenu {
                 utils.pressEnterToContinue();
             }
             case 5 -> {
-                System.out.println("> Enter the flight time(hh:mm): ");
-                String time = sc.next();
+                String time = utils.inputTime();
                 boolean isFound = false;
                 for (int i = 0; i < Database.flights.size(); i++) {
                     if (Database.flights.get(i).getTime().equals(time)) {
@@ -228,7 +232,7 @@ public class PassengerMenu {
             }
             case 6 -> {
                 System.out.println("> Price of the flight would be greater than: ");
-                int price = sc.nextInt();
+                int price = utils.inputNum();
                 boolean isFound = false;
                 for (int i = 0; i < Database.flights.size(); i++) {
                     if (Database.flights.get(i).getPrice() >= price) {
@@ -241,12 +245,27 @@ public class PassengerMenu {
                 }
                 utils.pressEnterToContinue();
             }
+            default -> {
+                System.out.println("> Invalid input");
+                utils.pressEnterToContinue();
+            }
         }
     }
 
     private void bookTicket() {
         bookTicketMenu();
         int userIndex = newUser.findUser(Menu.currentUsername);
+
+        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", "FlightId", "|", "Origin",
+                "|", "Destination",
+                "|", "Date", "|", "Time",
+                "|", "Price", "|", "Seats", "|"
+        );
+        System.out.println(".................................................................................................................");
+        for (int i = 0; i < Database.flights.size(); i++) {
+            flight.toString(i);
+            System.out.println(".................................................................................................................");
+        }
 
         System.out.println("> Enter the flightId you want to book: ");
         int flightIndex = flight.findFlight(sc.next());
@@ -292,7 +311,7 @@ public class PassengerMenu {
         System.out.println("> How much would you like to charge your account? ");
         System.out.println("> to the limit of " + Long.MAX_VALUE);
         System.out.println();
-        newUser.addBalance(sc.nextInt(), userIndex);
+        newUser.addBalance(utils.inputNum(), userIndex);
         utils.pressEnterToContinue();
     }
 }

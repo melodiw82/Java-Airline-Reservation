@@ -54,7 +54,8 @@ public class Signup {
 
         for (int i = 0; i < Database.users.size(); i++) {
             if (Database.users.get(i).getUsername().equals(newUsername)) {
-                System.out.println(">" + utils.RED_BOLD + "Duplicated username..." + utils.RESET);
+                System.out.println();
+                System.out.println("> " + utils.RED_BOLD + "Duplicated username..." + utils.RESET);
                 isWrong = true;
                 isDuplicated = true;
                 break;
@@ -63,16 +64,19 @@ public class Signup {
 
         if (!isDuplicated) {
             if ((newUsername.length() >= 4) && matcher.matches()) {
+                System.out.println();
                 System.out.printf("%s%n%n", utils.GREEN_BOLD + "> Username added successfully" + utils.RESET);
             } else {
-                System.out.println(">" + utils.RED_BOLD + "Invalid username..." + utils.RESET);
+                System.out.println();
+                System.out.println("> " + utils.RED_BOLD + "Invalid username..." + utils.RESET);
                 isWrong = true;
             }
         }
 
         for (int i = 0; i < Database.users.size(); i++) {
             if (Database.users.get(i).getPassword().equals(newPassword)) {
-                System.out.println(">" + utils.RED_BOLD + "Duplicated password..." + utils.RESET);
+                System.out.println();
+                System.out.println("> " + utils.RED_BOLD + "Duplicated password..." + utils.RESET);
                 isWrong = true;
                 isDuplicated = true;
                 break;
@@ -82,9 +86,11 @@ public class Signup {
             if ((newPassword.length() >= 4) && matcher2.matches()) {
                 user.addUser(newUsername, newPassword, 0);
                 countUser++;
+                System.out.println();
                 System.out.printf("%s%n", utils.GREEN_BOLD + "> Account created successfully" + utils.RESET);
             } else {
-                System.out.println(">" + utils.RED_BOLD + "Invalid password..." + utils.RESET);
+                System.out.println();
+                System.out.println("> " + utils.RED_BOLD + "Invalid password..." + utils.RESET);
                 isWrong = true;
             }
         }

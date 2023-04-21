@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -15,22 +14,26 @@ public class Menu {
         mainMenu();
         System.out.println();
         System.out.println("> Enter your command: ");
-        int command = sc.nextInt();
+        int command = utils.inputNum();
 
         while (true) {
             switch (command) {
-                case 1 -> {
+                case 1:
                     utils.clearScreen();
                     signIn();
-                }
-                case 2 -> {
+                    break;
+                case 2:
                     Signup signup = new Signup();
-                }
-                default -> throw new InputMismatchException("Unexpected value: " + command);
+                    break;
+                default:
+                    System.out.println("> Invalid input");
+                    System.out.println("> Please try again");
             }
             utils.clearScreen();
             mainMenu();
-            command = sc.nextInt();
+            System.out.println();
+            System.out.println("> Enter your command:");
+            command = utils.inputNum();
         }
     }
 
@@ -55,6 +58,7 @@ public class Menu {
             }
         }
         if (!isValid) {
+            System.out.println();
             System.out.println("> Invalid username or password");
             System.out.println("> If you don't hava an account, create one in sign up menu...");
             utils.pressEnterToContinue();
@@ -71,6 +75,7 @@ public class Menu {
                     <1> Sign in
                     <2> Sign up\s""" + utils.RESET);
     }
+
     private void signInMenu() {
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
