@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
 public class Menu {
-    private Scanner sc = new Scanner(System.in);
-    private AdminMenu adminMenu = new AdminMenu();
-    private PassengerMenu passengerMenu = new PassengerMenu();
-    private Utils utils = new Utils();
+    private final Scanner sc = new Scanner(System.in);
+    private final AdminMenu adminMenu = new AdminMenu();
+    private final PassengerMenu passengerMenu = new PassengerMenu();
+    private final Utils utils = new Utils();
 
     // keeps track of the user's username when signing in
     public static String currentUsername;
