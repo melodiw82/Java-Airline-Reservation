@@ -17,7 +17,7 @@ public class Menu {
         System.out.println("> Enter your command: ");
         int command = utils.inputNum();
 
-        while (true) {
+        while (command != 3) {
             switch (command) {
                 case 1:
                     utils.clearScreen();
@@ -76,7 +76,8 @@ public class Menu {
                 ..........................MENU OPTIONS........................
 
                     <1> Sign in
-                    <2> Sign up\s""" + utils.RESET);
+                    <2> Sign up
+                    <3> Exit\s""" + utils.RESET);
     }
 
     private void signInMenu() {

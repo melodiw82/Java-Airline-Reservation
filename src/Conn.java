@@ -12,6 +12,7 @@ public class Conn {
 
     public Conn() {
         try {
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/flightData", "root", "zari7294");
             System.out.println("> Database connection established");

@@ -12,8 +12,8 @@ public class Utils {
     public final String TEXT_ITALIC = "\033[3m";
     public final String GREY_BOLD = "\033[90m";
     public final String PINK_BOLD = "\033[95m";
-    private Scanner sc = new Scanner(System.in);
-    private Flight flight = new Flight();
+    private final Scanner sc = new Scanner(System.in);
+    private final Flight flight = new Flight();
 
     // clears the screen in cmd
     public void clearScreen() {
@@ -85,13 +85,13 @@ public class Utils {
         }
 
         if (countDigit(hour) == 1 && countDigit(min) == 2) {
-            return "0" + hour + ":" + min;
+            return "0" + hour + ":" + min + ":" + "00";
         } else if (countDigit(hour) == 2 && countDigit(min) == 1) {
-            return hour + ":" + "0" + min;
+            return hour + ":" + "0" + min + ":" + "00";
         } else if (countDigit(hour) == 1 && countDigit(min) == 1) {
-            return "0" + hour + ":" + "0" + min;
+            return "0" + hour + ":" + "0" + min + ":" + "00";
         } else if (countDigit(hour) == 2 && countDigit(min) == 2) {
-            return hour + ":" + min;
+            return hour + ":" + min + ":" + "00";
         } else {
             System.out.println("> Invalid input");
         }

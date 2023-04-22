@@ -8,6 +8,7 @@ public class Main {
     private static final Menu menu = new Menu();
 
     public static void main(String[] args) {
+        Conn conn = new Conn();
         menu.menuExecution();
     }
 }

@@ -75,9 +75,13 @@ public class AdminMenu {
         int seat = utils.inputNum();
 
         try {
-            conn.statement.executeQuery("INSERT INTO flights VALUES('" + fId + "', '" + origin + "', '" + origin + "', '" + date + "', '" + time + "', '" + price + "', '" + seat + "')");
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            String query = "INSERT INTO flights VALUES('" + fId + "', '" + origin + "', '" + destination + "', '" + date + "', '" + time + "', '" + price + "', '" + seat + "')";
+            conn.statement.execute(query);
+//            conn.statement.close();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println(utils.RED_BOLD + "> Flight already exists" + utils.RESET);
+        } catch (Exception exception) {
+            System.err.println(exception.getMessage());
         }
 
         System.out.println();
@@ -110,7 +114,7 @@ public class AdminMenu {
 //        }
 
 //        if (!isBooked) {
-        System.out.println(utils.CYAN_BOLD + "> Enter the section that needs to be updated: \n\n1.flight Id\n\n2.origin\n\n3.destination\n\n4.date\n\n5.time\n\n6.price\n\n7.seat" + utils.RESET);
+        System.out.println(utils.CYAN_BOLD + "> Enter the section that needs to be updated: \n\n1.origin\n\n2.destination\n\n3.date\n\n4.time\n\n5.price\n\n6.seat" + utils.RESET);
         System.out.println();
         int command = utils.inputNum();
 
@@ -120,100 +124,87 @@ public class AdminMenu {
 //                    foundFlight = true;
         switch (command) {
             case 1:
-                System.out.println("> Enter the new flight Id: ");
-                String updateCommand = sc.next();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET flight_id = '" + updateCommand + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET origin = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new origin: ");
+                    String updateCommand = sc.next();
+                    statement.setString(1, updateCommand);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+//                    statement.close();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             case 2:
-                System.out.println("> Enter the new origin: ");
-                updateCommand = sc.next();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET origin = '" + updateCommand + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET destination = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new destination: ");
+                    String updateCommand = sc.next();
+                    statement.setString(1, updateCommand);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             case 3:
-                System.out.println("> Enter the new destination: ");
-                updateCommand = sc.next();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET destination = '" + updateCommand + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET date = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new date: ");
+                    System.out.println();
+                    String updateCommand = utils.inputDate();
+                    java.sql.Date.valueOf(updateCommand);
+                    statement.setString(1, updateCommand);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             case 4:
-                System.out.println("> Enter the new date: ");
-                System.out.println();
-                updateCommand = utils.inputDate();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET date = '" + updateCommand + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET time = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new time: ");
+                    System.out.println();
+                    String updateCommand = utils.inputTime();
+                    java.sql.Time.valueOf(updateCommand);
+                    statement.setString(1, updateCommand);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             case 5:
-                System.out.println("> Enter the new time: ");
-                System.out.println();
-                updateCommand = utils.inputTime();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET time = '" + updateCommand + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET price = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new price: ");
+                    int updateCom = utils.inputNum();
+                    statement.setInt(1, updateCom);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             case 6:
-                System.out.println("> Enter the new price: ");
-                int updateCom = utils.inputNum();
-
                 try {
-                    conn.statement.executeQuery("UPDATE flights SET price = '" + updateCom + "' WHERE flight_id = '" + flightId + "'");
+                    PreparedStatement statement = conn.connection.prepareStatement("UPDATE flights SET seat = ? WHERE flight_id = ?");
+                    System.out.println("> Enter the new available seats: ");
+                    int updateCom = utils.inputNum();
+                    statement.setInt(1, updateCom);
+                    statement.setString(2, flightId);
+                    statement.executeUpdate();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> flight updated successfully" + utils.RESET);
-                break;
-            case 7:
-                System.out.println("> Enter the new available seats: ");
-                updateCom = utils.inputNum();
-
-                try {
-                    conn.statement.executeQuery("UPDATE flights SET seat = '" + updateCom + "' WHERE flight_id = '" + flightId + "'");
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                System.out.println();
-                System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
                 break;
             default:
                 System.out.println();
@@ -238,9 +229,6 @@ public class AdminMenu {
                             REMOVE FLIGHT
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
-        System.out.println("> Enter the flight ID to be removed: ");
-        String flightId = sc.next();
-
 //        boolean isBooked = false;
 
 //        for (int i = 0; i < Database.tickets.size(); i++) {
@@ -255,13 +243,18 @@ public class AdminMenu {
 //        boolean foundFlight = false;
 
         try {
-            conn.statement.executeQuery("DELETE FROM flights WHERE flight_id = '" + flightId + "'");
+            String query = "DELETE FROM flights WHERE flight_id = ?";
+            PreparedStatement statement = conn.connection.prepareStatement(query);
+            System.out.println("> Enter the flight ID to be removed: ");
+            String flightId = sc.next();
+            statement.setString(1, flightId);
+            statement.executeUpdate();
+            System.out.println();
+            System.out.println(utils.GREEN_BOLD + ">> Flight removed successfully" + utils.RESET);
+//            statement.close();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
-        System.out.println();
-        System.out.println(utils.GREEN_BOLD + ">> Flight removed successfully" + utils.RESET);
 //            }
 //            if (!foundFlight) {
 //                System.out.println();
@@ -270,7 +263,6 @@ public class AdminMenu {
         utils.pressEnterToContinue();
     }
 
-    // list of all flights
     public void scheduleFlightMenu() {
         utils.clearScreen();
         System.out.println(utils.CYAN_BOLD + """
@@ -279,8 +271,20 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
 
+        System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", "flight ID", "origin", "destination", "date", "time", "price", "seat");
         try {
-            conn.statement.executeQuery("SELECT * FROM flights ORDER BY date");
+            ResultSet rs = conn.statement.executeQuery("SELECT * FROM flights ORDER BY date");
+            while (rs.next()) {
+                String flightId = rs.getNString("flight_id");
+                String origin = rs.getString("origin");
+                String destination = rs.getString("destination");
+                Date date = rs.getDate("date");
+                Time time = rs.getTime("time");
+                int price = rs.getInt("price");
+                int seat = rs.getInt("seat");
+                System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", flightId, origin, destination, date, time, price, seat);
+            }
+
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -301,3 +305,5 @@ public class AdminMenu {
                     <0> Sign out""" + utils.RESET);
     }
 }
+
+// where to close the statement
