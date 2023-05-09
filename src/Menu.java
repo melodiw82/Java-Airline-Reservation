@@ -1,3 +1,6 @@
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Menu {
@@ -5,6 +8,7 @@ public class Menu {
     private final AdminMenu adminMenu = new AdminMenu();
     private final PassengerMenu passengerMenu = new PassengerMenu();
     private final Utils utils = new Utils();
+    private final Conn conn = new Conn();
 
     // keeps track of the user's username when signing in
     public static String currentUsername;
@@ -52,13 +56,23 @@ public class Menu {
             utils.clearScreen();
             adminMenu.adminMenuExe();
         }
-        for (int i = 0; i < Database.users.size(); i++) {
-            if (Database.users.get(i).getUsername().equals(currentUsername) && Database.users.get(i).getPassword().equals(pass)) {
+
+        try {
+            PreparedStatement statement = conn.connection.prepareStatement("SELECT username, password from users where username = ? AND  password = ?");
+            statement.setString(1, currentUsername);
+            statement.setString(2, pass);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
                 isValid = true;
                 utils.clearScreen();
                 passengerMenu.passengerMenuExe();
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
         if (!isValid) {
             System.out.println();
             System.out.println(utils.RED_BOLD + "> Invalid username or password" + utils.RESET);

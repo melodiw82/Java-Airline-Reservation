@@ -49,6 +49,6 @@ COMMIT;
 SELECT * FROM flights
 ORDER BY date;
 SELECT * FROM users
-ORDER BY balance;
+ORDER BY balance DESC;
 SELECT * FROM tickets
 order by ticket_id;

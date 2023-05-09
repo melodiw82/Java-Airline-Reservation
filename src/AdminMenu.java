@@ -255,11 +255,6 @@ public class AdminMenu {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-//            }
-//            if (!foundFlight) {
-//                System.out.println();
-//                System.out.println(utils.RED_BOLD + "> Flight not found" + utils.RESET);
-//            }
         utils.pressEnterToContinue();
     }
 
@@ -271,23 +266,7 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
 
-        System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", "flight ID", "origin", "destination", "date", "time", "price", "seat");
-        try {
-            ResultSet rs = conn.statement.executeQuery("SELECT * FROM flights ORDER BY date");
-            while (rs.next()) {
-                String flightId = rs.getNString("flight_id");
-                String origin = rs.getString("origin");
-                String destination = rs.getString("destination");
-                Date date = rs.getDate("date");
-                Time time = rs.getTime("time");
-                int price = rs.getInt("price");
-                int seat = rs.getInt("seat");
-                System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", flightId, origin, destination, date, time, price, seat);
-            }
-
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        utils.schedulePrinter();
 
         utils.pressEnterToContinue();
     }

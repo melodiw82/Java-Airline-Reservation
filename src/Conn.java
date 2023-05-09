@@ -1,22 +1,15 @@
 import java.sql.*;
-import java.util.Scanner;
 
 public class Conn {
 
     Connection connection = null;
     Statement statement = null;
 
-    public static void main(String[] args) {
-        Conn conn = new Conn();
-    }
-
     public Conn() {
         try {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/flightData", "root", "zari7294");
-            System.out.println("> Database connection established");
-            System.out.println();
             statement = connection.createStatement();
 
 
@@ -88,7 +81,7 @@ public class Conn {
             // flight schedule
 //            ResultSet rs = statement.executeQuery("SELECT * FROM flights ORDER BY date");
 //            while (rs.next()) {
-//                String flightId = rs.getNString("flight_id");
+//                String flightId = rs.getString("flight_id");
 //                String origin = rs.getString("origin");
 //                String destination = rs.getString("destination");
 //                Date date = rs.getDate("date");

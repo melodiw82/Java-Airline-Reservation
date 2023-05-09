@@ -1,3 +1,4 @@
+import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class Utils {
     public final String GREY_BOLD = "\033[90m";
     public final String PINK_BOLD = "\033[95m";
     private final Scanner sc = new Scanner(System.in);
-    private final Flight flight = new Flight();
+    private final Conn conn = new Conn();
 
     // clears the screen in cmd
     public void clearScreen() {
@@ -143,17 +144,35 @@ public class Utils {
         return tempInt;
     }
 
-    // prints the flight schedule
     public void schedulePrinter() {
-        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", CYAN_BOLD + "|", "FlightId", "|", "Origin",
-                "|", "Destination",
-                "|", "Date", "|", "Time",
-                "|", "Price", "|", "Seats", "|" + RESET
-        );
-        System.out.println(".................................................................................................................");
-        for (int i = 0; i < Database.flights.size(); i++) {
-            flight.toString(i);
-            System.out.println(".................................................................................................................");
+        System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", "flight ID", "origin", "destination", "date", "time", "price", "seat");
+        try {
+            ResultSet rs = conn.statement.executeQuery("SELECT * FROM flights ORDER BY date");
+            while (rs.next()) {
+                String flightId = rs.getNString("flight_id");
+                String origin = rs.getString("origin");
+                String destination = rs.getString("destination");
+                Date date = rs.getDate("date");
+                Time time = rs.getTime("time");
+                int price = rs.getInt("price");
+                int seat = rs.getInt("seat");
+                System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", flightId, origin, destination, date, time, price, seat);
+            }
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
+    }
+
+    public long getBalance() throws SQLException {
+        Conn conn = new Conn();
+        String query = "SELECT balance FROM users WHERE username = ?";
+        PreparedStatement statement = conn.connection.prepareStatement(query);
+        statement.setString(1, Menu.currentUsername);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            return rs.getLong("balance");
+        }
+        return 0;
     }
 }

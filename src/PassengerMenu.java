@@ -1,3 +1,4 @@
+import java.sql.*;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,20 +13,19 @@ public class PassengerMenu {
     // compiling the regex
     Pattern pattern = Pattern.compile(regex);
 
-    private Scanner sc = new Scanner(System.in);
-    private User newUser = new User();
-    private Ticket ticket = new Ticket();
-    private Flight flight = new Flight();
-    private Utils utils = new Utils();
+    private final Scanner sc = new Scanner(System.in);
+    private final Ticket ticket = new Ticket();
+    private final Utils utils = new Utils();
+    private final Conn conn = new Conn();
 
     // executes the passenger menu
-    public void passengerMenuExe() {
+    public void passengerMenuExe() throws SQLException {
         utils.clearScreen();
-        int userIndex = newUser.findUser(Menu.currentUsername);
         passengerMenu();
         System.out.println();
+
         System.out.println(">> Username: " + utils.PINK_BOLD + Menu.currentUsername + utils.RESET);
-        System.out.println(">> Balance: " + utils.PINK_BOLD + Database.users.get(userIndex).getBalance() + utils.RESET);
+        System.out.println(">> balance: " + utils.PINK_BOLD + utils.getBalance() + utils.RESET);
         System.out.println();
         System.out.println();
         System.out.println("> Enter your command: ");
@@ -49,7 +49,7 @@ public class PassengerMenu {
             passengerMenu();
             System.out.println();
             System.out.println(">> Username:" + utils.PINK_BOLD + Menu.currentUsername + utils.RESET);
-            System.out.println(">> Balance:" + utils.PINK_BOLD + Database.users.get(userIndex).getBalance() + utils.RESET);
+            System.out.println(">> balance: " + utils.PINK_BOLD + utils.getBalance() + utils.RESET);
             System.out.println();
             System.out.println();
             System.out.println("> Enter your command: ");
@@ -58,219 +58,135 @@ public class PassengerMenu {
     }
 
     // change the password of the user, checks for the password to have all the requirements
-    private void changePassword() {
+    private void changePassword() throws SQLException {
         changePasswordMenu();
 
-        for (int i = 0; i < Database.users.size(); i++) {
-            if (Database.users.get(i).getUsername().equals(Menu.currentUsername)) {
-                System.out.println(">> Your current password is " + utils.PINK_BOLD + Database.users.get(i).getPassword() + utils.RESET);
+        System.out.println(utils.TEXT_ITALIC + utils.RED_BOLD + """
+                ::::::::::::::::::::::::::::::::::::::::::::::::::::
+                password must contain the followings:
+                >> Capital letters
+                >> Small letters
+                >> numbers
+                >> with the length of at least 4 digits
+                ::::::::::::::::::::::::::::::::::::::::::::::::::::""" + utils.RESET);
+        System.out.println();
+        System.out.println("> Enter your new password: ");
+        String pass = sc.next();
 
-                System.out.println(utils.TEXT_ITALIC + utils.RED_BOLD + """
-                        ::::::::::::::::::::::::::::::::::::::::::::::::::::
-                        password must contain the followings:
-                        >> Capital letters
-                        >> Small letters
-                        >> numbers
-                        >> with the length of at least 4 digits
-                        ::::::::::::::::::::::::::::::::::::::::::::::::::::""" + utils.RESET);
-                System.out.println();
-                System.out.println("> Enter your new password: ");
-                String pass = sc.next();
-
-                Matcher matcher = pattern.matcher(pass);
-                if (pass.equals(Database.users.get(i).getPassword())) {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Password is the same as before..." + utils.RESET);
-                } else if ((pass.length() >= 4) && matcher.matches()) {
-                    Database.users.get(i).setPassword(pass);
-                    System.out.println();
-                    System.out.println(utils.GREEN_BOLD + "> Password changed successfully" + utils.RESET);
-                } else {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Password doesn't match the requirements" + utils.RESET);
-                    System.out.println();
-                    System.out.println(utils.GREY_BOLD + "Please try again... " + utils.RESET);
-                }
-            }
+        Matcher matcher = pattern.matcher(pass);
+        if ((pass.length() >= 4) && matcher.matches()) {
+            PreparedStatement statement = conn.connection.prepareStatement("UPDATE users SET password = ? WHERE username = ?");
+            statement.setString(1, pass);
+            statement.setString(2, Menu.currentUsername);
+            statement.executeUpdate();
+            System.out.println(utils.GREEN_BOLD + "> Password changed successfully" + utils.RESET);
+        } else {
+            System.out.println();
+            System.out.println(utils.RED_BOLD + "> Password doesn't match the requirements" + utils.RESET);
+            System.out.println();
+            System.out.println(utils.GREY_BOLD + "Please try again... " + utils.RESET);
         }
         utils.pressEnterToContinue();
     }
 
     // searches in the flights' arraylist
-    private void searchFlight() {
+    private void searchFlight() throws SQLException {
         searchFlightMenu();
 
-        System.out.println(utils.CYAN_BOLD + "> Enter the field you want to search:\n\n1.flight Id\n\n2.origin\n\n3.destination\n\n4.date\n\n5.time\n\n6.price range " + utils.RESET);
-        System.out.println();
-        int searchCom = utils.inputNum();
-        System.out.println();
-        switch (searchCom) {
-            case 1 -> {
-                System.out.println("> Enter the flight Id: ");
-                String id = sc.next();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getFlightId().equals(id)) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println(utils.RED_BOLD + "> Flight not found" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            case 2 -> {
-                System.out.println("> Enter the flight origin: ");
-                String origin = sc.next();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getOrigin().equals(origin)) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Origin is not available" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            case 3 -> {
-                System.out.println("> Enter the flight destination: ");
-                String destination = sc.next();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getDestination().equals(destination)) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Destination in not available" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            case 4 -> {
-                String date = utils.inputDate();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getDate().equals(date)) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Date unavailable" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            case 5 -> {
-                String time = utils.inputTime();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getTime().equals(time)) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println(utils.RED_BOLD + "> Time unavailable" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            case 6 -> {
-                System.out.println("> Price of the flight would be greater than: ");
-                int price = utils.inputNum();
-                boolean isFound = false;
-                for (int i = 0; i < Database.flights.size(); i++) {
-                    if (Database.flights.get(i).getPrice() >= price) {
-                        System.out.println();
-                        flight.toString(i);
-                        isFound = true;
-                    }
-                }
-                if (!isFound) {
-                    System.out.println();
-                    System.out.println(utils.RED_BOLD + "> Price unavailable" + utils.RESET);
-                }
-                utils.pressEnterToContinue();
-            }
-            default -> {
-                System.out.println(utils.RED_BOLD + "> Invalid input" + utils.RESET);
-                utils.pressEnterToContinue();
-            }
+        System.out.println(utils.CYAN_BOLD + "> Enter the flight ID you want to search based on: " + utils.RESET);
+        String search = sc.next();
+        String query = "SELECT * FROM flights WHERE flight_id = ?";
+        PreparedStatement statement = conn.connection.prepareStatement(query);
+        statement.setString(1, search);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            String flightId = rs.getNString("flight_id");
+            String origin = rs.getString("origin");
+            String destination = rs.getString("destination");
+            Date date = rs.getDate("date");
+            Time time = rs.getTime("time");
+            int price = rs.getInt("price");
+            int seat = rs.getInt("seat");
+            System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", flightId, origin, destination, date, time, price, seat);
         }
+        utils.pressEnterToContinue();
     }
 
     // prints the schedule of flights and let user book the desirable flights
-    private void bookTicket() {
+    private void bookTicket() throws SQLException {
         bookTicketMenu();
-        int userIndex = newUser.findUser(Menu.currentUsername);
-
-        utils.schedulePrinter();
 
         System.out.println();
         System.out.println("> Enter the flightId you want to book: ");
-        int flightIndex = flight.findFlight(sc.next());
+        String id = sc.next();
 
-        if (userIndex >= 0 && flightIndex >= 0) {
-            ticket.buyTicket(userIndex, flightIndex);
-            utils.pressEnterToContinue();
-        }
+        ticket.buyTicket(id);
+        utils.pressEnterToContinue();
 
-        if (flightIndex == -1) {
-            System.out.println();
-            System.out.println(utils.RED_BOLD + "> Flight not found" + utils.RESET);
-            utils.pressEnterToContinue();
-        }
     }
 
     // cancels the ticket using the ticket ID
-    private void cancelTicket() {
+    private void cancelTicket() throws SQLException {
         cancelTicketMenu();
         System.out.println(">> You can find your ticket Id in " + utils.CYAN_BOLD + "5. Booked tickets" + utils.RESET + " field");
         System.out.println();
         System.out.println("> Enter your ticket Id: ");
-        int ticketIndex = ticket.findTicket(sc.next());
-        if (ticketIndex == -1) {
-            System.out.println();
-            System.out.println(utils.RED_BOLD + "> Ticket not found" + utils.RESET);
-            utils.pressEnterToContinue();
-        } else if (ticketIndex >= 0) {
-            ticket.cancelTicket(ticketIndex);
-            utils.pressEnterToContinue();
-        }
+        String ticket = sc.next();
+
+        String query = "DELETE FROM tickets WHERE ticket_id = ?";
+        PreparedStatement statement = conn.connection.prepareStatement(query);
+        statement.setString(1, ticket);
+        statement.executeUpdate();
+        System.out.println("> ticket cancelled successfully");
+        utils.pressEnterToContinue();
     }
 
     // users can see the already booked tickets of them
     private void bookedTicket() {
-        bookedTicketMenu();
-        int userIndex = newUser.findUser(Menu.currentUsername);
-        System.out.println("> You can find information about your flight by searching the flight Id in " + utils.CYAN_BOLD + "2. Search flight tickets" + utils.RESET + " field");
-        System.out.println();
-        ticket.bookedTicket(userIndex);
+        System.out.printf("%-15s%-15s%n", "ticket ID", "flightID");
+        try {
+            ResultSet rs = conn.statement.executeQuery("SELECT ticket_id, flightId_ti FROM tickets WHERE username_ti = '" + Menu.currentUsername + "' ORDER BY ticket_id");
+
+            while (rs.next()) {
+                String ticket = rs.getNString("ticket_id");
+                String flight = rs.getString("flightId_ti");
+
+                System.out.printf("%-15s%-15s%n", ticket, flight);
+            }
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
         utils.pressEnterToContinue();
     }
 
     // adds charges to the user's account in order to book flights
-    private void addCharge() {
+    private void addCharge() throws SQLException {
         addChargeMenu();
-        int userIndex = newUser.findUser(Menu.currentUsername);
 
-        System.out.println("> Your current balance is " + utils.PINK_BOLD + Database.users.get(userIndex).getBalance() + utils.RESET);
+        long oldBalance = utils.getBalance();
+
+        System.out.println("> Your current balance: " + oldBalance);
         System.out.println();
-        System.out.println("> How much would you like to charge your account? ");
-        System.out.println("> to the limit of " + Long.MAX_VALUE);
-        System.out.println();
-        newUser.addBalance(utils.inputLong(), userIndex);
+
+        System.out.println("> How much would you like to charge your account?");
+        long balance = utils.inputLong();
+
+        PreparedStatement st = conn.connection.prepareStatement("SELECT balance FROM users WHERE username = ?");
+        st.setString(1, Menu.currentUsername);
+
+
+        if (balance > 0) {
+            PreparedStatement statement = conn.connection.prepareStatement("UPDATE users SET balance = ? WHERE username = ?");
+            statement.setLong(1, balance + oldBalance);
+            statement.setString(2, Menu.currentUsername);
+            statement.executeUpdate();
+            System.out.println(utils.GREEN_BOLD + "> Account charged successfully" + utils.RESET);
+        } else {
+            System.out.println(utils.RED_BOLD + "Enter a valid amount" + utils.RESET);
+        }
+
         utils.pressEnterToContinue();
     }
 
@@ -282,7 +198,9 @@ public class PassengerMenu {
                             FLIGHT SCHEDULE
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
+
         utils.schedulePrinter();
+
         utils.pressEnterToContinue();
     }
 
@@ -334,15 +252,6 @@ public class PassengerMenu {
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
                           TICKET CANCELLATION
-                ::::::::::::::::::::::::::::::::::::::::
-                  """ + utils.RESET);
-    }
-
-    private void bookedTicketMenu() {
-        utils.clearScreen();
-        System.out.println(utils.CYAN_BOLD + """
-                ::::::::::::::::::::::::::::::::::::::::
-                            BOOKED TICKET
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
     }
