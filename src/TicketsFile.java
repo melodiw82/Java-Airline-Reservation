@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TicketsFile extends FileWriter {
     private final File ticket;
     public RandomAccessFile ticketRand;
-    private UsersFile usersFile = new UsersFile();
-    private FlightsFile flightsFile = new FlightsFile();
+    private final UsersFile usersFile = new UsersFile();
+    private final FlightsFile flightsFile = new FlightsFile();
 
     public TicketsFile() {
         ticket = new File("ticket.text");
@@ -81,26 +81,32 @@ public class TicketsFile extends FileWriter {
         }
     }
 
-    public void readTickets() throws IOException {
+    public void searchTicket(String username) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "r");
-        ticketRand.seek(0);
 
-        String tmp;
-        System.out.printf("%s%-14s%s%-14s%s%-14s%n", "|", "TicketId", "|", "username",
-                "|", "flightId"
-        );
-        System.out.println(".....................................................................................................");
-        while ((tmp = ticketRand.readLine()) != null) {
-            System.out.println(tmp);
+        boolean found = false;
+        for (int i = FIX_SIZE; i < ticketRand.length(); i += ((3 * FIX_SIZE) + 1)) {
+            String temp = new String(readCharsFromFile(ticketRand, i, FIX_SIZE));
+            if (temp.trim().equals(username)) {
+                toString(i - FIX_SIZE);
+                found = true;
+            }
         }
-
+        if (!found) {
+            System.out.println("> Flight not found");
+        }
         ticketRand.close();
+    }
+
+    private void toString(int ticketIndex) throws IOException {
+        ticketRand.seek(ticketIndex);
+        System.out.println(ticketRand.readLine());
     }
 
     public int findTicket(String ticketId) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "r");
 
-        for (int i = 0; i < ticketRand.length(); i += 46) {
+        for (int i = 0; i < ticketRand.length(); i += ((3 * FIX_SIZE)) + 1) {
             ticketRand.seek(i);
 
             String id = new String(readCharsFromFile(ticketRand, i, FIX_SIZE));
@@ -119,16 +125,16 @@ public class TicketsFile extends FileWriter {
         flightsFile.flightRand = new RandomAccessFile(flightsFile.flight, "rw");
         usersFile.userRand = new RandomAccessFile(usersFile.user, "rw");
 
-        String flightId = new String(readCharsFromFile(ticketRand, ticketIndex + 30, 5));
+        String flightId = new String(readCharsFromFile(ticketRand, ticketIndex + (2 * FIX_SIZE), 5));
         int flightIndex = flightsFile.findFlight(flightId);
-        int seat = flightsFile.StringToInt(flightsFile.flightRand, flightIndex + 90);
+        int seat = flightsFile.StringToInt(flightsFile.flightRand, flightIndex + (6 * FIX_SIZE));
         flightsFile.updateSeat("cancel", flightIndex, seat);
 
-        String username = new String(readCharsFromFile(ticketRand, ticketIndex + 15, FIX_SIZE));
+        String username = new String(readCharsFromFile(ticketRand, ticketIndex + FIX_SIZE, FIX_SIZE));
         int userIndex = usersFile.findUser(username.trim());
 
-        int price = flightsFile.StringToInt(flightsFile.flightRand, flightIndex + 75);
-        int balance = usersFile.StringToInt(usersFile.userRand, userIndex + 30);
+        int price = flightsFile.StringToInt(flightsFile.flightRand, flightIndex + (5 * FIX_SIZE));
+        int balance = usersFile.StringToInt(usersFile.userRand, userIndex + (2 * FIX_SIZE));
         int backToAccount = balance + price;
 
         usersFile.updateBalance(userIndex, backToAccount);
@@ -143,17 +149,17 @@ public class TicketsFile extends FileWriter {
         ticketRand = new RandomAccessFile(ticket, "rw");
 
         int j = index;
-        for (int i = index + 46; i < ticketRand.length(); i += 46) {
+        for (int i = index + ((3 * FIX_SIZE) + 1); i < ticketRand.length(); i += ((3 * FIX_SIZE) + 1)) {
             ticketRand.seek(i);
             String temp = ticketRand.readLine();
 
             ticketRand.seek(j);
             ticketRand.writeBytes(temp);
 
-            j += 46;
+            j += ((3 * FIX_SIZE) + 1);
         }
 
-        ticketRand.setLength(ticketRand.length() - 46);
+        ticketRand.setLength(ticketRand.length() - ((3 * FIX_SIZE) + 1));
     }
 
     // flight fully booked

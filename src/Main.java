@@ -2,7 +2,7 @@ import java.io.IOException;
 
 /**
  * airline reservation system terminal app
- * to run the program click on the run.bat file
+ * using random access file
  *
  * @author Zahra Rafiei
  */

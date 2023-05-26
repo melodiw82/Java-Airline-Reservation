@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Signup {
-    private UsersFile usersFile = new UsersFile();
-    private Utils utils = new Utils();
+    private final UsersFile usersFile = new UsersFile();
+    private final Utils utils = new Utils();
 
     // regex to keep track of username and password requirements
     private final String regex = "^(?=.*[a-z])(?=."

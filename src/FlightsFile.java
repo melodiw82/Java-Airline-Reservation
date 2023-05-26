@@ -45,7 +45,7 @@ public class FlightsFile extends FileWriter {
     public int findFlight(String flightId) throws IOException {
         flightRand = new RandomAccessFile(flight, "r");
 
-        for (int i = 0; i < flightRand.length(); i += 106) {
+        for (int i = 0; i < flightRand.length(); i += ((7 * FIX_SIZE) + 1)) {
             flightRand.seek(i);
 
             String id = new String(readCharsFromFile(flightRand, i, 5));
@@ -81,22 +81,22 @@ public class FlightsFile extends FileWriter {
 
         switch (section) {
             case "origin" -> {
-                flightRand.seek(index + 15);
+                flightRand.seek(index + FIX_SIZE);
                 flightRand.writeBytes(fixStringToWrite(updateCommand));
             }
 
             case "destination" -> {
-                flightRand.seek(index + 30);
+                flightRand.seek(index + (2 * FIX_SIZE));
                 flightRand.writeBytes(fixStringToWrite(updateCommand));
             }
 
             case "date" -> {
-                flightRand.seek(index + 45);
+                flightRand.seek(index + (3 * FIX_SIZE));
                 flightRand.writeBytes(fixStringToWrite(updateCommand));
             }
 
             case "time" -> {
-                flightRand.seek(index + 60);
+                flightRand.seek(index + (4 * FIX_SIZE));
                 flightRand.writeBytes(fixStringToWrite(updateCommand));
             }
         }
@@ -109,12 +109,12 @@ public class FlightsFile extends FileWriter {
 
         switch (section) {
             case "price" -> {
-                flightRand.seek(index + 75);
+                flightRand.seek(index + (5 * FIX_SIZE));
                 flightRand.writeBytes(fixIntToWrite(updateCommand));
             }
 
             case "seat" -> {
-                flightRand.seek(index + 90);
+                flightRand.seek(index + (6 * FIX_SIZE));
                 flightRand.writeBytes(fixIntToWrite(updateCommand));
             }
         }
@@ -127,17 +127,17 @@ public class FlightsFile extends FileWriter {
         flightRand = new RandomAccessFile(flight, "rw");
 
         int j = index;
-        for (int i = index + 106; i < flightRand.length(); i += 106) {
+        for (int i = index + ((7 * FIX_SIZE) + 1); i < flightRand.length(); i += ((7 * FIX_SIZE) + 1)) {
             flightRand.seek(i);
             String temp = flightRand.readLine();
 
             flightRand.seek(j);
             flightRand.writeBytes(temp);
 
-            j += 106;
+            j += ((7 * FIX_SIZE) + 1);
         }
 
-        flightRand.setLength(flightRand.length() - 106);
+        flightRand.setLength(flightRand.length() - ((7 * FIX_SIZE) + 1));
 
         flightRand.close();
     }
@@ -146,7 +146,7 @@ public class FlightsFile extends FileWriter {
         flightRand = new RandomAccessFile(flight, "r");
         boolean found = false;
 
-        for (int i = seek; i < flightRand.length(); i += 106) {
+        for (int i = seek; i < flightRand.length(); i += ((7 * FIX_SIZE) + 1)) {
             String temp = new String(readCharsFromFile(flightRand, i, FIX_SIZE));
             if (temp.trim().equals(str)) {
                 toString(i - seek);
@@ -167,7 +167,7 @@ public class FlightsFile extends FileWriter {
     public void updateSeat(String section, int index, int seat) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
 
-        flightRand.seek(index + 90);
+        flightRand.seek(index + (6 * FIX_SIZE));
         switch (section) {
             case "buy" -> flightRand.writeBytes(fixIntToWrite(seat - 1));
             case "cancel" -> flightRand.writeBytes(fixIntToWrite(seat + 1));

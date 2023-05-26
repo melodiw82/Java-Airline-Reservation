@@ -2,9 +2,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class AdminMenu {
-    private Scanner sc = new Scanner(System.in);
-    private Utils utils = new Utils();
-    private FlightsFile flightsFile = new FlightsFile();
+    private final Scanner sc = new Scanner(System.in);
+    private final Utils utils = new Utils();
+    private final FlightsFile flightsFile = new FlightsFile();
 
     // executes the admin menu
     public void adminMenuExe() throws IOException {

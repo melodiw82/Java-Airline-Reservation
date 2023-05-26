@@ -14,20 +14,16 @@ public class PassengerMenu {
     // compiling the regex
     Pattern pattern = Pattern.compile(regex);
 
-    private Scanner sc = new Scanner(System.in);
-    private Utils utils = new Utils();
-    private UsersFile usersFile = new UsersFile();
-    private FlightsFile flightsFile = new FlightsFile();
-    private TicketsFile ticketsFile = new TicketsFile();
+    private final Scanner sc = new Scanner(System.in);
+    private final Utils utils = new Utils();
+    private final UsersFile usersFile = new UsersFile();
+    private final FlightsFile flightsFile = new FlightsFile();
+    private final TicketsFile ticketsFile = new TicketsFile();
 
     // executes the passenger menu
     public void passengerMenuExe() throws IOException {
-        utils.clearScreen();
-        passengerMenu();
-        System.out.println();
-        System.out.println("> Enter your command: ");
+        menuHelp();
         int userCommand = utils.inputNum();
-
         while (userCommand != 0) {
             switch (userCommand) {
                 case 1 -> changePassword();
@@ -42,12 +38,23 @@ public class PassengerMenu {
                     utils.pressEnterToContinue();
                 }
             }
-            utils.clearScreen();
-            passengerMenu();
-            System.out.println();
-            System.out.println("> Enter your command: ");
+            menuHelp();
             userCommand = utils.inputNum();
         }
+    }
+
+    private void menuHelp() throws IOException {
+        usersFile.userRand = new RandomAccessFile(usersFile.user, "r");
+
+        utils.clearScreen();
+        passengerMenu();
+        System.out.println();
+        System.out.println(utils.PINK_BOLD + "> username: " + new String(usersFile.readCharsFromFile(usersFile.userRand, usersFile.findUser(Menu.currentUsername), usersFile.FIX_SIZE)));
+        System.out.println("> balance: " + new String(usersFile.readCharsFromFile(usersFile.userRand, usersFile.findUser(Menu.currentUsername) + (2 * usersFile.FIX_SIZE), usersFile.FIX_SIZE)) + utils.RESET);
+        System.out.println();
+        System.out.println("> Enter your command: ");
+
+        usersFile.userRand.close();
     }
 
     // change the password of the user, checks for the password to have all the requirements
@@ -105,33 +112,33 @@ public class PassengerMenu {
                 System.out.println("> Enter the flight origin: ");
                 String origin = sc.next();
 
-                flightsFile.searchFlight(15, origin);
+                flightsFile.searchFlight(flightsFile.FIX_SIZE, origin);
                 utils.pressEnterToContinue();
             }
             case 3 -> {
                 System.out.println("> Enter the flight destination: ");
                 String destination = sc.next();
 
-                flightsFile.searchFlight(30, destination);
+                flightsFile.searchFlight((2 * flightsFile.FIX_SIZE), destination);
                 utils.pressEnterToContinue();
             }
             case 4 -> {
                 String date = utils.inputDate();
 
-                flightsFile.searchFlight(45, date);
+                flightsFile.searchFlight((3 * flightsFile.FIX_SIZE), date);
                 utils.pressEnterToContinue();
             }
             case 5 -> {
                 String time = utils.inputTime();
 
-                flightsFile.searchFlight(60, time);
+                flightsFile.searchFlight((4 * flightsFile.FIX_SIZE), time);
                 utils.pressEnterToContinue();
             }
             case 6 -> {
                 System.out.println("> Price of the flight would be: ");
                 int price = utils.inputNum();
 
-                flightsFile.searchFlight(75, Integer.toString(price));
+                flightsFile.searchFlight((5 * flightsFile.FIX_SIZE), Integer.toString(price));
                 utils.pressEnterToContinue();
             }
             default -> {
@@ -167,7 +174,7 @@ public class PassengerMenu {
     // cancels the ticket using the ticket ID
     private void cancelTicket() throws IOException {
         cancelTicketMenu();
-        ticketsFile.readTickets();
+        ticketsFile.searchTicket(Menu.currentUsername);
         System.out.println();
         System.out.println("> Enter your ticket Id: ");
         int ticketIndex = ticketsFile.findTicket(sc.next());
@@ -190,7 +197,7 @@ public class PassengerMenu {
         System.out.println("> You can find information about your flight by searching the flight Id in " + utils.CYAN_BOLD + "2. Search flight tickets" + utils.RESET + " field");
         System.out.println();
 
-        ticketsFile.readTickets();
+        ticketsFile.searchTicket(Menu.currentUsername);
 
         utils.pressEnterToContinue();
     }
@@ -200,7 +207,7 @@ public class PassengerMenu {
         usersFile.userRand = new RandomAccessFile(usersFile.user, "rw");
 
         addChargeMenu();
-        System.out.println("> Your current balance is " + utils.PINK_BOLD + new String(usersFile.readCharsFromFile(usersFile.userRand, (usersFile.findUser(Menu.currentUsername) + 30), usersFile.FIX_SIZE)) + utils.RESET);
+        System.out.println("> Your current balance is " + utils.PINK_BOLD + new String(usersFile.readCharsFromFile(usersFile.userRand, (usersFile.findUser(Menu.currentUsername) + (2 * usersFile.FIX_SIZE)), usersFile.FIX_SIZE)) + utils.RESET);
         System.out.println();
         System.out.println("> How much would you like to charge your account? ");
         System.out.println("> to the limit of " + Integer.MAX_VALUE);
@@ -210,9 +217,9 @@ public class PassengerMenu {
             System.out.println("> Please enter a valid amount");
             update = utils.inputNum();
         }
-        if (update > 0) {
-            usersFile.updateBalance(usersFile.findUser(Menu.currentUsername), update);
-        }
+        int balance = usersFile.StringToInt(usersFile.userRand, (usersFile.findUser(Menu.currentUsername) + (2 * usersFile.FIX_SIZE)));
+        usersFile.updateBalance(usersFile.findUser(Menu.currentUsername), (update + balance));
+
         utils.pressEnterToContinue();
     }
 

@@ -15,7 +15,7 @@ public class Utils {
     public final String GREY_BOLD = "\033[90m";
     public final String PINK_BOLD = "\033[95m";
     private Scanner sc = new Scanner(System.in);
-    private FlightsFile flightsFile = new FlightsFile();
+    private final FlightsFile flightsFile = new FlightsFile();
 
     // clears the screen in cmd
     public void clearScreen() {

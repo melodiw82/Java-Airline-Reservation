@@ -39,9 +39,9 @@ public class UsersFile extends FileWriter {
     public boolean findUser(String username, String password) throws IOException {
         userRand = new RandomAccessFile(user, "r");
 
-        for (int i = 0; i < userRand.length(); i += 46) {
+        for (int i = 0; i < userRand.length(); i += ((3 * FIX_SIZE) + 1)) {
             boolean user = equalString(userRand, username, i);
-            boolean pass = equalString(userRand, password, i + 15);
+            boolean pass = equalString(userRand, password, i + FIX_SIZE);
 
             if (user && pass) {
                 userRand.close();
@@ -55,7 +55,7 @@ public class UsersFile extends FileWriter {
     public int findUser(String username) throws IOException {
         userRand = new RandomAccessFile(user, "r");
 
-        for (int i = 0; i < userRand.length(); i += 46) {
+        for (int i = 0; i < userRand.length(); i += ((3 * FIX_SIZE) + 1)) {
             userRand.seek(i);
 
             String user = new String(readCharsFromFile(userRand, i, FIX_SIZE));
@@ -70,7 +70,7 @@ public class UsersFile extends FileWriter {
     public void updatePassword(int index, String password) throws IOException {
         userRand = new RandomAccessFile(user, "rw");
 
-        userRand.seek(index + 15);
+        userRand.seek(index + FIX_SIZE);
         userRand.writeBytes(fixStringToWrite(password));
 
         userRand.close();
@@ -79,7 +79,7 @@ public class UsersFile extends FileWriter {
     public void updateBalance(int index, int balance) throws IOException {
         userRand = new RandomAccessFile(user, "rw");
 
-        userRand.seek(index + 30);
+        userRand.seek(index + (2 * FIX_SIZE));
         userRand.writeBytes(fixIntToWrite(balance));
 
         userRand.close();
