@@ -5,6 +5,7 @@ public class Menu {
     private Scanner sc = new Scanner(System.in);
     private AdminMenu adminMenu = new AdminMenu();
     private PassengerMenu passengerMenu = new PassengerMenu();
+    UsersFile usersFile = new UsersFile();
     private Utils utils = new Utils();
 
     // keeps track of the user's username when signing in
@@ -53,13 +54,13 @@ public class Menu {
             utils.clearScreen();
             adminMenu.adminMenuExe();
         }
-        for (int i = 0; i < Database.users.size(); i++) {
-            if (Database.users.get(i).getUsername().equals(currentUsername) && Database.users.get(i).getPassword().equals(pass)) {
-                isValid = true;
-                utils.clearScreen();
-                passengerMenu.passengerMenuExe();
-            }
+
+        if (usersFile.findUser(currentUsername, pass)) {
+            isValid = true;
+            utils.clearScreen();
+            passengerMenu.passengerMenuExe();
         }
+
         if (!isValid) {
             System.out.println();
             System.out.println(utils.RED_BOLD + "> Invalid username or password" + utils.RESET);

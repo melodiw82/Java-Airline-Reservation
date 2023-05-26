@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Database database = new Database();
         FlightsFile flightsFile = new FlightsFile();
+        UsersFile usersFile = new UsersFile();
 
         menu.menuExecution();
     }

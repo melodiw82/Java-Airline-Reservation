@@ -4,7 +4,6 @@ import java.util.Scanner;
 public class AdminMenu {
     private Scanner sc = new Scanner(System.in);
     private Utils utils = new Utils();
-    private Flight flight = new Flight();
     private FlightsFile flightsFile = new FlightsFile();
 
     // executes the admin menu
@@ -42,18 +41,14 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
 
-        boolean isFound = false;
         System.out.println("> Add flight ID: (Ex. WX-12)");
         String fId = utils.inputID(sc.next());
-        for (int i = 0; i < Database.flights.size(); i++) {
-            if (Database.flights.get(i).getFlightId().equals(fId)) {
-                System.out.println();
-                System.out.println(utils.RED_BOLD + "> Flight already exists" + utils.RESET);
-                isFound = true;
-            }
+        int index = flightsFile.findFlight(fId);
+        if (index != -1) {
+            System.out.println(utils.RED_BOLD + "> Flight already exists" + utils.RESET);
         }
 
-        if (!isFound) {
+        if (index == -1) {
             System.out.println();
             System.out.println("> Add flight origin: (Ex. Yazd)");
             String origin = utils.inputCity(sc.next());
@@ -90,7 +85,7 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
         System.out.println("> Enter the flight ID to be updated: ");
-        int index = flightsFile.findFlight(sc.next());
+        int index = flightsFile.findFlight(utils.inputID(sc.next()));
         System.out.println();
 
 //        for (int i = 0; i < Database.tickets.size(); i++) {
@@ -175,7 +170,7 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
         System.out.println("> Enter the flight ID to be removed: ");
-        int index = flightsFile.findFlight(sc.next());
+        int index = flightsFile.findFlight(utils.inputID(sc.next()));
 
 //        for (int i = 0; i < Database.tickets.size(); i++) {
 //            if (Database.tickets.get(i).getTiFlightId().equals(flightId)) {

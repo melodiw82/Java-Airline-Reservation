@@ -3,10 +3,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class FlightsFile {
-    public File flight;
+public class FlightsFile extends FileWriter {
+    private final File flight;
     public RandomAccessFile flightRand;
-    private final int FIX_SIZE = 15;
 
     public FlightsFile() {
         flight = new File("flight.text");
@@ -17,31 +16,11 @@ public class FlightsFile {
         }
     }
 
-    private String fixStringToWrite(String str) {
-        StringBuilder strBuilder = new StringBuilder(str);
-        while (strBuilder.length() < FIX_SIZE) {
-            strBuilder.append(" ");
-        }
-        return strBuilder.toString();
-    }
-
-    private String fixIntToWrite(int integer) {
-        StringBuilder temp = new StringBuilder(Integer.toString(integer));
-        while (temp.length() < FIX_SIZE) {
-            temp.append(" ");
-        }
-        return temp.toString();
-    }
-
     // writes the flight information at the end of the file
     public void writeFlightInFile(String flightId, String origin, String destination, String date, String time, int price, int seats) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
         if (flight.exists()) {
-            try {
                 flightRand.seek(flightRand.length());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
             try {
                 flightRand.writeBytes(fixStringToWrite(flightId));
@@ -88,7 +67,7 @@ public class FlightsFile {
         for (int i = 0; i < flightRand.length(); i += 106) {
             flightRand.seek(i);
 
-            String id = new String(readCharsFromFile(i, 5));
+            String id = new String(readCharsFromFile(flightRand, i, 5));
 
             if (id.equals(flightId)) {
                 flightRand.close();
@@ -97,16 +76,6 @@ public class FlightsFile {
         }
         flightRand.close();
         return -1;
-    }
-
-    private byte[] readCharsFromFile(int seek, int chars) throws IOException {
-        flightRand = new RandomAccessFile(flight, "r");
-
-        flightRand.seek(seek);
-        byte[] bytes = new byte[chars];
-        flightRand.read(bytes);
-
-        return bytes;
     }
 
     public void updateFlight(int index, String section, String updateCommand) throws IOException {

@@ -14,22 +14,6 @@ public class Flight {
         seats = 100;
     }
 
-    // constructor
-    public Flight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
-        setFlightId(flightId);
-        setOrigin(origin);
-        setDestination(destination);
-        setDate(date);
-        setTime(time);
-        setPrice(price);
-        setSeats(seats);
-    }
-
-    // adds flights to the flights arraylist
-    public void addFlight(String flightId, String origin, String destination, String date, String time, int price, int seats) {
-        Database.flights.add(new Flight(flightId, origin, destination, date, time, price, seats));
-    }
-
     // prints the list of flights used in flight schedule field
     public void toString(int index) {
         System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", "|", Database.flights.get(index).getFlightId(), "|", Database.flights.get(index).getOrigin(),
@@ -54,48 +38,24 @@ public class Flight {
         return flightId;
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
-    }
-
     public String getOrigin() {
         return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
     }
 
     public String getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
     public String getDate() {
         return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTime() {
         return time;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public int getPrice() {
         return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getSeats() {

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ public class Utils {
     public final String GREY_BOLD = "\033[90m";
     public final String PINK_BOLD = "\033[95m";
     private Scanner sc = new Scanner(System.in);
-    private Flight flight = new Flight();
+    private FlightsFile flightsFile = new FlightsFile();
 
     // clears the screen in cmd
     public void clearScreen() {
@@ -168,16 +169,7 @@ public class Utils {
     }
 
     // prints the flight schedule
-    public void schedulePrinter() {
-        System.out.printf("%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%-15s%s%n", CYAN_BOLD + "|", "FlightId", "|", "Origin",
-                "|", "Destination",
-                "|", "Date", "|", "Time",
-                "|", "Price", "|", "Seats", "|" + RESET
-        );
-        System.out.println(".................................................................................................................");
-        for (int i = 0; i < Database.flights.size(); i++) {
-            flight.toString(i);
-            System.out.println(".................................................................................................................");
-        }
+    public void schedulePrinter() throws IOException {
+        flightsFile.readSchedule();
     }
 }

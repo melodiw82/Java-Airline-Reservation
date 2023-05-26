@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +20,7 @@ public class PassengerMenu {
     private Utils utils = new Utils();
 
     // executes the passenger menu
-    public void passengerMenuExe() {
+    public void passengerMenuExe() throws IOException {
         utils.clearScreen();
         int userIndex = newUser.findUser(Menu.currentUsername);
         passengerMenu();
@@ -211,7 +212,7 @@ public class PassengerMenu {
     }
 
     // prints the schedule of flights and let user book the desirable flights
-    private void bookTicket() {
+    private void bookTicket() throws IOException {
         bookTicketMenu();
         int userIndex = newUser.findUser(Menu.currentUsername);
 
@@ -275,7 +276,7 @@ public class PassengerMenu {
     }
 
     // list of all flights
-    public void scheduleFlight() {
+    public void scheduleFlight() throws IOException {
         utils.clearScreen();
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
