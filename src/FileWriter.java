@@ -33,4 +33,11 @@ public class FileWriter {
 
         return temp.trim().equals(str);
     }
+
+    public int StringToInt(RandomAccessFile randFile, int seek) throws IOException {
+        randFile.seek(seek);
+
+        String integer = new String(readCharsFromFile(randFile, seek, FIX_SIZE));
+        return Integer.parseInt(integer.trim());
+    }
 }

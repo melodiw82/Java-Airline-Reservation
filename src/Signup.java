@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Signup {
-    UsersFile usersFile = new UsersFile();
+    private UsersFile usersFile = new UsersFile();
     private Utils utils = new Utils();
 
     // regex to keep track of username and password requirements

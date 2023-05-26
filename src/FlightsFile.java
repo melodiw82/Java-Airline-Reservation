@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class FlightsFile extends FileWriter {
-    private final File flight;
+    public final File flight;
     public RandomAccessFile flightRand;
 
     public FlightsFile() {
@@ -20,7 +20,7 @@ public class FlightsFile extends FileWriter {
     public void writeFlightInFile(String flightId, String origin, String destination, String date, String time, int price, int seats) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
         if (flight.exists()) {
-                flightRand.seek(flightRand.length());
+            flightRand.seek(flightRand.length());
 
             try {
                 flightRand.writeBytes(fixStringToWrite(flightId));
@@ -42,6 +42,21 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    public int findFlight(String flightId) throws IOException {
+        flightRand = new RandomAccessFile(flight, "r");
+
+        for (int i = 0; i < flightRand.length(); i += 106) {
+            flightRand.seek(i);
+
+            String id = new String(readCharsFromFile(flightRand, i, 5));
+
+            if (id.equals(flightId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // reads all the flights from the beginning of the file
     public void readSchedule() throws IOException {
         flightRand = new RandomAccessFile(flight, "r");
@@ -59,23 +74,6 @@ public class FlightsFile extends FileWriter {
         }
 
         flightRand.close();
-    }
-
-    public int findFlight(String flightId) throws IOException {
-        flightRand = new RandomAccessFile(flight, "r");
-
-        for (int i = 0; i < flightRand.length(); i += 106) {
-            flightRand.seek(i);
-
-            String id = new String(readCharsFromFile(flightRand, i, 5));
-
-            if (id.equals(flightId)) {
-                flightRand.close();
-                return i;
-            }
-        }
-        flightRand.close();
-        return -1;
     }
 
     public void updateFlight(int index, String section, String updateCommand) throws IOException {
@@ -142,5 +140,37 @@ public class FlightsFile extends FileWriter {
         flightRand.setLength(flightRand.length() - 106);
 
         flightRand.close();
+    }
+
+    public void searchFlight(int seek, String str) throws IOException {
+        flightRand = new RandomAccessFile(flight, "r");
+        boolean found = false;
+
+        for (int i = seek; i < flightRand.length(); i += 106) {
+            String temp = new String(readCharsFromFile(flightRand, i, FIX_SIZE));
+            if (temp.trim().equals(str)) {
+                toString(i - seek);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("> Flight not found");
+        }
+        flightRand.close();
+    }
+
+    private void toString(int flightIndex) throws IOException {
+        flightRand.seek(flightIndex);
+        System.out.println(flightRand.readLine());
+    }
+
+    public void updateSeat(String section, int index, int seat) throws IOException {
+        flightRand = new RandomAccessFile(flight, "rw");
+
+        flightRand.seek(index + 90);
+        switch (section) {
+            case "buy" -> flightRand.writeBytes(fixIntToWrite(seat - 1));
+            case "cancel" -> flightRand.writeBytes(fixIntToWrite(seat + 1));
+        }
     }
 }

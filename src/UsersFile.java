@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class UsersFile extends FileWriter {
-    private final File user;
+    public final File user;
     public RandomAccessFile userRand;
 
     public UsersFile() {
@@ -44,9 +44,44 @@ public class UsersFile extends FileWriter {
             boolean pass = equalString(userRand, password, i + 15);
 
             if (user && pass) {
+                userRand.close();
                 return true;
             }
         }
+        userRand.close();
         return false;
+    }
+
+    public int findUser(String username) throws IOException {
+        userRand = new RandomAccessFile(user, "r");
+
+        for (int i = 0; i < userRand.length(); i += 46) {
+            userRand.seek(i);
+
+            String user = new String(readCharsFromFile(userRand, i, FIX_SIZE));
+
+            if (user.trim().equals(username)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void updatePassword(int index, String password) throws IOException {
+        userRand = new RandomAccessFile(user, "rw");
+
+        userRand.seek(index + 15);
+        userRand.writeBytes(fixStringToWrite(password));
+
+        userRand.close();
+    }
+
+    public void updateBalance(int index, int balance) throws IOException {
+        userRand = new RandomAccessFile(user, "rw");
+
+        userRand.seek(index + 30);
+        userRand.writeBytes(fixIntToWrite(balance));
+
+        userRand.close();
     }
 }

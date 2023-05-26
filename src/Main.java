@@ -10,9 +10,9 @@ public class Main {
     private static final Menu menu = new Menu();
 
     public static void main(String[] args) throws IOException {
-        Database database = new Database();
         FlightsFile flightsFile = new FlightsFile();
         UsersFile usersFile = new UsersFile();
+        TicketsFile ticketsFile = new TicketsFile();
 
         menu.menuExecution();
     }

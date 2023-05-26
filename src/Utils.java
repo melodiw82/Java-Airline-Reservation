@@ -151,23 +151,6 @@ public class Utils {
         return tempInt;
     }
 
-    // used for getting Longs' input to avoid InputMissMatch exception
-    public long inputLong() {
-        boolean isNotDone = true;
-        long tempInt = 0;
-        do {
-            try {
-                tempInt = sc.nextLong();
-                isNotDone = false;
-            } catch (InputMismatchException e) {
-                System.out.println(GREY_BOLD + "> Wrong input try again: " + RESET);
-                sc.nextLine();
-            }
-        } while (isNotDone);
-
-        return tempInt;
-    }
-
     // prints the flight schedule
     public void schedulePrinter() throws IOException {
         flightsFile.readSchedule();
