@@ -1,12 +1,14 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class AdminMenu {
     private Scanner sc = new Scanner(System.in);
     private Utils utils = new Utils();
     private Flight flight = new Flight();
+    private FlightsFile flightsFile = new FlightsFile();
 
     // executes the admin menu
-    public void adminMenuExe() {
+    public void adminMenuExe() throws IOException {
         utils.clearScreen();
         adminMenu();
         System.out.printf("%n%s%n", "> Enter your command: ");
@@ -32,7 +34,7 @@ public class AdminMenu {
     }
 
     // adds new flights to the flight arraylist
-    private void addFlightMenu() {
+    private void addFlightMenu() throws IOException {
         utils.clearScreen();
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
@@ -42,7 +44,7 @@ public class AdminMenu {
 
         boolean isFound = false;
         System.out.println("> Add flight ID: (Ex. WX-12)");
-        String fId = sc.next();
+        String fId = utils.inputID(sc.next());
         for (int i = 0; i < Database.flights.size(); i++) {
             if (Database.flights.get(i).getFlightId().equals(fId)) {
                 System.out.println();
@@ -54,10 +56,10 @@ public class AdminMenu {
         if (!isFound) {
             System.out.println();
             System.out.println("> Add flight origin: (Ex. Yazd)");
-            String origin = sc.next();
+            String origin = utils.inputCity(sc.next());
             System.out.println();
             System.out.println("> Add flight destination: (Ex.Tehran)");
-            String destination = sc.next();
+            String destination = utils.inputCity(sc.next());
             System.out.println();
             System.out.println("> Add flight date:");
             System.out.println();
@@ -72,7 +74,7 @@ public class AdminMenu {
             System.out.println();
             System.out.println("> Add available seats: (integer)");
             int seat = utils.inputNum();
-            flight.addFlight(fId, origin, destination, date, time, price, seat);
+            flightsFile.writeFlightInFile(fId, origin, destination, date, time, price, seat);
             System.out.println();
             System.out.println(utils.GREEN_BOLD + ">> Flight added successfully" + utils.RESET);
         }
@@ -80,7 +82,7 @@ public class AdminMenu {
     }
 
     // updates the flights, doesn't let the admin update already booked flights
-    private void updateFlightMenu() {
+    private void updateFlightMenu() throws IOException {
         utils.clearScreen();
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
@@ -88,99 +90,84 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
         System.out.println("> Enter the flight ID to be updated: ");
-        String flightId = sc.next();
+        int index = flightsFile.findFlight(sc.next());
         System.out.println();
 
-        boolean isBooked = false;
+//        for (int i = 0; i < Database.tickets.size(); i++) {
+//            if (Database.tickets.get(i).getTiFlightId().equals(flightId)) {
+//                System.out.println(utils.RED_BOLD + "> Flight is already booked and cannot be changed" + utils.RESET);
+//                System.out.println();
+//                isBooked = true;
+//                utils.pressEnterToContinue();
+//                break;
+//            }
+//        }
 
-        for (int i = 0; i < Database.tickets.size(); i++) {
-            if (Database.tickets.get(i).getTiFlightId().equals(flightId)) {
-                System.out.println(utils.RED_BOLD + "> Flight is already booked and cannot be changed" + utils.RESET);
-                System.out.println();
-                isBooked = true;
-                utils.pressEnterToContinue();
-                break;
-            }
+        if (index == -1) {
+            System.out.println();
+            System.out.println(utils.RED_BOLD + ">> Flight not found" + utils.RESET);
+            utils.pressEnterToContinue();
         }
-
-        if (!isBooked) {
-            System.out.println(utils.CYAN_BOLD + "> Enter the section that needs to be updated: \n\n1.flight Id\n\n2.origin\n\n3.destination\n\n4.date\n\n5.time\n\n6.price\n\n7.seat" + utils.RESET);
+        if (index != -1) {
+            System.out.println(utils.CYAN_BOLD + "> Enter the section that needs to be updated: \n\n1.origin\n\n2.destination\n\n3.date\n\n4.time\n\n5.price\n\n6.seat" + utils.RESET);
             System.out.println();
             int command = utils.inputNum();
 
-            boolean foundFlight = false;
-            for (int i = 0; i < Database.flights.size(); i++) {
-                if ((Database.flights.get(i).getFlightId()).equals(flightId)) {
-                    foundFlight = true;
-                    switch (command) {
-                        case 1:
-                            System.out.println("> Enter the new flight Id: ");
-                            String updateCommand = sc.next();
-                            Database.flights.get(i).setFlightId(updateCommand);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        case 2:
-                            System.out.println("> Enter the new origin: ");
-                            updateCommand = sc.next();
-                            Database.flights.get(i).setOrigin(updateCommand);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        case 3:
-                            System.out.println("> Enter the new destination: ");
-                            updateCommand = sc.next();
-                            Database.flights.get(i).setDestination(updateCommand);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        case 4:
-                            System.out.println("> Enter the new date: ");
-                            System.out.println();
-                            updateCommand = utils.inputDate();
-                            Database.flights.get(i).setDate(updateCommand);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        case 5:
-                            System.out.println("> Enter the new time: ");
-                            System.out.println();
-                            updateCommand = utils.inputTime();
-                            Database.flights.get(i).setTime(updateCommand);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        case 6:
-                            System.out.println("> Enter the new price: ");
-                            int updateCom = utils.inputNum();
-                            Database.flights.get(i).setPrice(updateCom);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> flight updated successfully" + utils.RESET);
-                            break;
-                        case 7:
-                            System.out.println("> Enter the new available seats: ");
-                            updateCom = utils.inputNum();
-                            Database.flights.get(i).setSeats(updateCom);
-                            System.out.println();
-                            System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
-                            break;
-                        default:
-                            System.out.println();
-                            System.out.println(utils.RED_BOLD + "> Invalid input" + utils.RESET);
-                    }
-                    utils.pressEnterToContinue();
-                }
+            switch (command) {
+                case 1:
+                    System.out.println("> Enter the new origin: ");
+                    String updateCommand = sc.next();
+                    flightsFile.updateFlight(index, "origin", updateCommand);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+                    break;
+                case 2:
+                    System.out.println("> Enter the new destination: ");
+                    updateCommand = sc.next();
+                    flightsFile.updateFlight(index, "destination", updateCommand);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+                    break;
+                case 3:
+                    System.out.println("> Enter the new date: ");
+                    System.out.println();
+                    updateCommand = utils.inputDate();
+                    flightsFile.updateFlight(index, "date", updateCommand);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+                    break;
+                case 4:
+                    System.out.println("> Enter the new time: ");
+                    System.out.println();
+                    updateCommand = utils.inputTime();
+                    flightsFile.updateFlight(index, "time", updateCommand);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+                    break;
+                case 5:
+                    System.out.println("> Enter the new price: ");
+                    int updateCom = utils.inputNum();
+                    flightsFile.updateFlight(index, "price", updateCom);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> flight updated successfully" + utils.RESET);
+                    break;
+                case 6:
+                    System.out.println("> Enter the new available seats: ");
+                    updateCom = utils.inputNum();
+                    flightsFile.updateFlight(index, "seat", updateCom);
+                    System.out.println();
+                    System.out.println(utils.GREEN_BOLD + "> Flight updated successfully" + utils.RESET);
+                    break;
+                default:
+                    System.out.println();
+                    System.out.println(utils.RED_BOLD + "> Invalid input" + utils.RESET);
             }
-            if (!foundFlight) {
-                System.out.println();
-                System.out.println(utils.RED_BOLD + ">> Flight not found" + utils.RESET);
-                utils.pressEnterToContinue();
-            }
+            utils.pressEnterToContinue();
         }
     }
 
     // removes existing flights using the flight ID, doesn't let the admin remove already booked flights
-    private void removeFlightMenu() {
+    private void removeFlightMenu() throws IOException {
         utils.clearScreen();
         System.out.println(utils.CYAN_BOLD + """
                 ::::::::::::::::::::::::::::::::::::::::
@@ -188,35 +175,26 @@ public class AdminMenu {
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
         System.out.println("> Enter the flight ID to be removed: ");
-        String flightId = sc.next();
+        int index = flightsFile.findFlight(sc.next());
 
-        boolean isBooked = false;
-
-        for (int i = 0; i < Database.tickets.size(); i++) {
-            if (Database.tickets.get(i).getTiFlightId().equals(flightId)) {
-                System.out.println();
-                System.out.println(utils.RED_BOLD + "> Flight is already booked and cannot be removed" + utils.RESET);
-                isBooked = true;
-                break;
-            }
+//        for (int i = 0; i < Database.tickets.size(); i++) {
+//            if (Database.tickets.get(i).getTiFlightId().equals(flightId)) {
+//                System.out.println();
+//                System.out.println(utils.RED_BOLD + "> Flight is already booked and cannot be removed" + utils.RESET);
+//                isBooked = true;
+//                break;
+//            }
+//        }
+        if (index != -1) {
+            flightsFile.removeFlight(index);
+            System.out.println(utils.GREEN_BOLD + "> Flight removed successfully" + utils.RESET);
         }
 
-        if (!isBooked) {
-            boolean foundFlight = false;
-            for (int i = 0; i < Database.flights.size(); i++) {
-                if ((Database.flights.get(i).getFlightId()).equals(flightId)) {
-                    Database.flights.remove(i);
-                    foundFlight = true;
-                    System.out.println();
-                    System.out.println(utils.GREEN_BOLD + ">> Flight removed successfully" + utils.RESET);
-                    break;
-                }
-            }
-            if (!foundFlight) {
-                System.out.println();
-                System.out.println(utils.RED_BOLD + "> Flight not found" + utils.RESET);
-            }
+        if (index == -1) {
+            System.out.println();
+            System.out.println(utils.RED_BOLD + "> Flight not found" + utils.RESET);
         }
+
         utils.pressEnterToContinue();
     }
 
@@ -228,7 +206,11 @@ public class AdminMenu {
                             FLIGHT SCHEDULE
                 ::::::::::::::::::::::::::::::::::::::::
                   """ + utils.RESET);
-        utils.schedulePrinter();
+        try {
+            flightsFile.readSchedule();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         utils.pressEnterToContinue();
     }
 

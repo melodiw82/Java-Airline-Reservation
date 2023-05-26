@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu {
@@ -10,14 +11,14 @@ public class Menu {
     public static String currentUsername;
 
     // executes the menu
-    public void menuExecution() {
+    public void menuExecution() throws IOException {
         utils.clearScreen();
         mainMenu();
         System.out.println();
         System.out.println("> Enter your command: ");
         int command = utils.inputNum();
 
-        while (true) {
+        while (command != 3) {
             switch (command) {
                 case 1:
                     utils.clearScreen();
@@ -39,7 +40,7 @@ public class Menu {
     }
 
     // signs in the admin and user
-    private void signIn() {
+    private void signIn() throws IOException {
         signInMenu();
         System.out.println("> Enter your username: ");
         currentUsername = sc.next();
