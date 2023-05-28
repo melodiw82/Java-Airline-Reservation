@@ -36,21 +36,30 @@ public class Signup {
         Matcher matcher2 = pattern.matcher(newPassword);
 
         boolean isWrong = false;
+        boolean isDuplicate = false;
 
-        if (((newUsername.length() >= 4) && matcher.matches() && (newUsername.length() < 16)) && ((newPassword.length() >= 4) && matcher2.matches()) && (newPassword.length() < 16)) {
-            usersFile.writeUserInFile(newUsername, newPassword, 0);
-
+        if (usersFile.duplicateUser(newUsername)) {
             System.out.println();
-            System.out.printf("%s%n%n", utils.GREEN_BOLD + "> Account created successfully" + utils.RESET);
-        } else {
-            System.out.println();
-            System.out.println(utils.RED_BOLD + "> Username or password doesn't match the requirements" + utils.RESET);
-            isWrong = true;
+            System.out.println(utils.RED_BOLD + "Username is duplicate and already used, please enter another one..." + utils.RESET);
+            isDuplicate = true;
         }
 
-        if (isWrong) {
-            System.out.println();
-            System.out.println(utils.GREY_BOLD + "> Please try again..." + utils.RESET);
+        if (!isDuplicate) {
+            if (((newUsername.length() >= 4) && matcher.matches() && (newUsername.length() < 16)) && ((newPassword.length() >= 4) && matcher2.matches()) && (newPassword.length() < 16)) {
+                usersFile.writeUserInFile(newUsername, newPassword, 0);
+
+                System.out.println();
+                System.out.printf("%s%n%n", utils.GREEN_BOLD + "> Account created successfully" + utils.RESET);
+            } else {
+                System.out.println();
+                System.out.println(utils.RED_BOLD + "> Username or password doesn't match the requirements" + utils.RESET);
+                isWrong = true;
+            }
+
+            if (isWrong) {
+                System.out.println();
+                System.out.println(utils.GREY_BOLD + "> Please try again..." + utils.RESET);
+            }
         }
         utils.pressEnterToContinue();
     }
@@ -74,6 +83,4 @@ public class Signup {
                 ::::::::::::::::::::::::::::::::::::::::::::::::::::""" + utils.RESET);
 
     }
-
-    // duplicate username
 }

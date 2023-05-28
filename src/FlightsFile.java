@@ -7,6 +7,9 @@ public class FlightsFile extends FileWriter {
     public final File flight;
     public RandomAccessFile flightRand;
 
+    /**
+     * constructor to generate a random access file
+     */
     public FlightsFile() {
         flight = new File("flight.text");
         try {
@@ -16,7 +19,16 @@ public class FlightsFile extends FileWriter {
         }
     }
 
-    // writes the flight information at the end of the file
+    /**
+     * writes flight's information at the end of the file
+     * @param flightId id of the flight
+     * @param origin origin of the flight
+     * @param destination destination of the flight
+     * @param date date of the flight
+     * @param time time of the flight
+     * @param price price of the flight in Thomans
+     * @param seats available seats left
+     */
     public void writeFlightInFile(String flightId, String origin, String destination, String date, String time, int price, int seats) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
         if (flight.exists()) {
@@ -42,6 +54,11 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    /**
+     * finds the flight index using flight id
+     * @param flightId id of the flight
+     * @return index of the line in which given flight is, if flight doesn't exist it will return -1
+     */
     public int findFlight(String flightId) throws IOException {
         flightRand = new RandomAccessFile(flight, "r");
 
@@ -57,7 +74,9 @@ public class FlightsFile extends FileWriter {
         return -1;
     }
 
-    // reads all the flights from the beginning of the file
+    /**
+     * reads all the flights from the beginning of the file
+     */
     public void readSchedule() throws IOException {
         flightRand = new RandomAccessFile(flight, "r");
         flightRand.seek(0);
@@ -76,6 +95,12 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    /**
+     * sets said parameters and overrides the file to save new info in place of the old ones
+     * @param index index of the beginning line of the flight
+     * @param section section which will be updated
+     * @param updateCommand new value of the given section
+     */
     public void updateFlight(int index, String section, String updateCommand) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
 
@@ -104,6 +129,12 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    /**
+     * overrides the above method, for integers (price and seat)
+     * @param index index of the flight
+     * @param section section to be updated
+     * @param updateCommand new value that will override the old information
+     */
     public void updateFlight(int index, String section, int updateCommand) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
 
@@ -122,7 +153,10 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
-    // shifts the flights up by 1 line and deletes the last line of file
+    /**
+     * shift all the flights after the removed on by 1 line and removes the last line of the file
+     * @param index index of the flight
+     */
     public void removeFlight(int index) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
 
@@ -142,6 +176,11 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    /**
+     * used in search flight field, searches the file and the wanted field
+     * @param seek determines the field to be searched
+     * @param str given string to be searched
+     */
     public void searchFlight(int seek, String str) throws IOException {
         flightRand = new RandomAccessFile(flight, "r");
         boolean found = false;
@@ -159,11 +198,21 @@ public class FlightsFile extends FileWriter {
         flightRand.close();
     }
 
+    /**
+     * used in above method to display the flight line
+     * @param flightIndex index of the flight
+     */
     private void toString(int flightIndex) throws IOException {
         flightRand.seek(flightIndex);
         System.out.println(flightRand.readLine());
     }
 
+    /**
+     * used for buying or cancelling a ticket, if the section is "buy" a seat will be reduced and if it is "cancel" a seat will be added
+     * @param section buy or cancel
+     * @param index index of the flight
+     * @param seat number of seats in the flight
+     */
     public void updateSeat(String section, int index, int seat) throws IOException {
         flightRand = new RandomAccessFile(flight, "rw");
 

@@ -9,7 +9,11 @@ public class TicketsFile extends FileWriter {
     public RandomAccessFile ticketRand;
     private final UsersFile usersFile = new UsersFile();
     private final FlightsFile flightsFile = new FlightsFile();
+    private final Utils utils = new Utils();
 
+    /**
+     * constructor to generate a random access file
+     */
     public TicketsFile() {
         ticket = new File("ticket.text");
         try {
@@ -19,6 +23,12 @@ public class TicketsFile extends FileWriter {
         }
     }
 
+    /**
+     * generates a random id for each flight using flight id and random numbers
+     *
+     * @param flightIndex index of the flight
+     * @return a random ticket id
+     */
     private String generateId(int flightIndex) throws IOException {
         flightsFile.flightRand = new RandomAccessFile(flightsFile.flight, "r");
 
@@ -27,6 +37,13 @@ public class TicketsFile extends FileWriter {
         return newFlightId + ThreadLocalRandom.current().nextInt(0, 999 + 1) + ThreadLocalRandom.current().nextInt(0, 9 + 1);
     }
 
+    /**
+     * writes information of the ticket at the end of the file
+     *
+     * @param ticketId id of the ticket
+     * @param username username of the user who booked the ticked
+     * @param flightID id of the booked flight
+     */
     public void writeTicketInFile(String ticketId, String username, String flightID) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "rw");
 
@@ -48,6 +65,12 @@ public class TicketsFile extends FileWriter {
         ticketRand.close();
     }
 
+    /**
+     * method used for buying a ticket, reduces the seats by one, checks the balance of user and takes the money from user's account
+     *
+     * @param flightIndex index of flight
+     * @param userIndex   index of user
+     */
     public void buyTicket(int flightIndex, int userIndex) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "rw");
         flightsFile.flightRand = new RandomAccessFile(flightsFile.flight, "rw");
@@ -57,30 +80,45 @@ public class TicketsFile extends FileWriter {
         int seat = flightsFile.StringToInt(flightsFile.flightRand, flightIndex + 90);
         int balance = usersFile.StringToInt(usersFile.userRand, userIndex + 30);
 
-        if (balance < price) {
-            long shortOf = price - balance;
-            System.out.println();
-            System.out.println("> You're short of " + shortOf);
-            System.out.println();
-            System.out.println("> Please charge your account");
-        } else {
-            int newBalance = balance - price;
-            usersFile.updateBalance(userIndex, newBalance);
-            flightsFile.updateSeat("buy", flightIndex, seat);
-            String id = generateId(flightIndex);
-            String flightId = new String(flightsFile.readCharsFromFile(flightsFile.flightRand, flightIndex, 5));
+        boolean isBooked = false;
 
-            writeTicketInFile(id, Menu.currentUsername, flightId);
-            System.out.println("> Flight booked successfully");
+        if (seat == 0) {
             System.out.println();
-            System.out.println("> Your ticket Id is " + id);
+            System.out.println(utils.RED_BOLD + "> Flight is fully booked" + utils.RESET);
+            isBooked = true;
+        }
 
-            flightsFile.flightRand.close();
-            usersFile.userRand.close();
-            ticketRand.close();
+        if (!isBooked) {
+            if (balance < price) {
+                long shortOf = price - balance;
+                System.out.println();
+                System.out.println("> You're short of " + shortOf);
+                System.out.println();
+                System.out.println("> Please charge your account");
+            } else {
+                int newBalance = balance - price;
+                usersFile.updateBalance(userIndex, newBalance);
+                flightsFile.updateSeat("buy", flightIndex, seat);
+                String id = generateId(flightIndex);
+                String flightId = new String(flightsFile.readCharsFromFile(flightsFile.flightRand, flightIndex, 5));
+
+                writeTicketInFile(id, Menu.currentUsername, flightId);
+                System.out.println("> Flight booked successfully");
+                System.out.println();
+                System.out.println("> Your ticket Id is " + id);
+
+                flightsFile.flightRand.close();
+                usersFile.userRand.close();
+                ticketRand.close();
+            }
         }
     }
 
+    /**
+     * searches for available tickets of user
+     *
+     * @param username username of the user
+     */
     public void searchTicket(String username) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "r");
 
@@ -98,11 +136,22 @@ public class TicketsFile extends FileWriter {
         ticketRand.close();
     }
 
+    /**
+     * used in above method to display the ticket's line
+     *
+     * @param ticketIndex index of ticket
+     */
     private void toString(int ticketIndex) throws IOException {
         ticketRand.seek(ticketIndex);
         System.out.println(ticketRand.readLine());
     }
 
+    /**
+     * finds the index of ticket and returns it, if the ticket was not found it will return -1
+     *
+     * @param ticketId id of the ticket
+     * @return index of ticket in random access file
+     */
     public int findTicket(String ticketId) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "r");
 
@@ -120,6 +169,11 @@ public class TicketsFile extends FileWriter {
         return -1;
     }
 
+    /**
+     * cancels the ticket, removes the line of the ticket, reduces the seats of flight by one and gives the money back to user account
+     *
+     * @param ticketIndex index of ticket
+     */
     public void cancelTicket(int ticketIndex) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "rw");
         flightsFile.flightRand = new RandomAccessFile(flightsFile.flight, "rw");
@@ -145,6 +199,11 @@ public class TicketsFile extends FileWriter {
         System.out.println("> Ticket cancelled successfully");
     }
 
+    /**
+     * removes the ticket, shifts the lines by one and removes the last line of ticketRand
+     *
+     * @param index index of ticket
+     */
     public void removeTicket(int index) throws IOException {
         ticketRand = new RandomAccessFile(ticket, "rw");
 
@@ -162,5 +221,25 @@ public class TicketsFile extends FileWriter {
         ticketRand.setLength(ticketRand.length() - ((3 * FIX_SIZE) + 1));
     }
 
-    // flight fully booked
+    /**
+     * to check not to update or remove already booked flights
+     *
+     * @param flightId id of flight
+     * @return true if the flight was booked
+     */
+    public boolean alreadyBooked(String flightId) throws IOException {
+        ticketRand = new RandomAccessFile(ticket, "r");
+
+        for (int i = (2 * FIX_SIZE); i < ticketRand.length(); i += ((3 * FIX_SIZE) + 1)) {
+            ticketRand.seek(i);
+
+            String id = new String(readCharsFromFile(ticketRand, i, 5));
+
+            if (id.equals(flightId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
